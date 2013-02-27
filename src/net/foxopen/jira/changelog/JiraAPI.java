@@ -2,11 +2,9 @@ package net.foxopen.jira.changelog;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
-import java.util.List;
 
 import org.joda.time.DateTime;
 
@@ -32,7 +30,7 @@ public class JiraAPI
   private final String username_, password_;
   private final URI jiraServerURI_;
   private LinkedList<VersionInfo> versionList_;
-  
+  private VersionInfoCache cache_;
   
   /**
    * JiraAPI Constructor that accepts the basicinformation require to
@@ -55,6 +53,11 @@ public class JiraAPI
     } finally {
       jiraServerURI_ = tempURI;
     }
+  }
+  
+  public void setVersionInfoCache(VersionInfoCache cache) 
+  {
+    cache_ = cache;
   }
   
   
@@ -98,7 +101,7 @@ public class JiraAPI
       }
       
       versionList_ = new LinkedList<VersionInfo>();
-      VersionInfoCache cache = new VersionInfoCache(projectKey, "U:\\object_cache");
+      
       
       // For each version determine if it was released prior to the current build. If so get a list of issues fixed in it and 
       // and add it to a LinkedList. If the version has been previously cached the data will be pulled from the cache.
@@ -109,7 +112,10 @@ public class JiraAPI
             
             // Attempt to get the changelog from the cache. If it can't be found or were trying
             // to generate a changelog for the current version then build/rebuild and cache.
-            VersionInfo vi = cache.getCached(v.getName());
+            VersionInfo vi = null;
+            if (cache_ != null) {
+              vi = cache_.getCached(v.getName());
+            }
             if (vi == null || v.getName().equals(versionLabel)) {
               LinkedList<String> issueList = new LinkedList<String>();
               SearchResult sr = restClient.getSearchClient().searchJql("project = '" + projectKey + "' and fixVersion = '" + v.getName() + "'", pm);
@@ -129,7 +135,9 @@ public class JiraAPI
               }
               
               vi = new VersionInfo(v.getName(), v.getDescription(), v.getReleaseDate().toDate(), issueList);
-              cache.cache(vi);
+              if (cache_ != null) {
+                cache_.cache(vi);
+              }
               versionList_.add(vi);
             } else {
               versionList_.add(vi);

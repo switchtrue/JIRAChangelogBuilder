@@ -19,15 +19,21 @@ public class Changelog
   public static void main(String[] args) 
   { 
     final String versionFilePath = args[0];
-    final String jiraProjectName = args[1];
+    final String jiraProjectKey  = args[1];
     final String jiraURL         = args[2];
     final String jiraUsername    = args[3];
     final String jiraPassword    = args[4];
-     
+    String objectCachePath = null; // Optional so make sure this is last and handle in try/catch below.
+    try { objectCachePath = args[5]; } catch (ArrayIndexOutOfBoundsException e) {} 
+    
     String versionLabel = VersionReader.getRelease(versionFilePath);
     
     JiraAPI jiraApi = new JiraAPI(jiraUsername, jiraPassword, jiraURL);
-    jiraApi.fetchVersionDetails(jiraProjectName, versionLabel);
+    if (objectCachePath != null) {
+      VersionInfoCache cache = new VersionInfoCache(jiraProjectKey, objectCachePath);
+      jiraApi.setVersionInfoCache(cache);
+    }
+    jiraApi.fetchVersionDetails(jiraProjectKey, versionLabel);
     
     ChangelogBuilder clWriter = new ChangelogBuilder();
     clWriter.build(jiraApi.getVersionInfoList());
