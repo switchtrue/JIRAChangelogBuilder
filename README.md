@@ -10,7 +10,8 @@ Usage
 
 2) From the command line:
 
-`java -jar jira-changelog-builder.jar <version_file_path> <JIRA_project_name> <JIRA_URL> <JIRA_username> <JIRA_password> [<path_to_cache>]`
+    java -jar jira-changelog-builder.jar <version_file_path> <JIRA_project_name> <JIRA_URL>
+            <JIRA_username> <JIRA_password> [<path_to_cache>]
   
 Where all arguments are used as follows:
   
