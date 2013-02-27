@@ -24,6 +24,8 @@ import com.atlassian.jira.rest.client.internal.jersey.JerseyJiraRestClientFactor
 /**
  * @author leonmi
  *
+ * JiraAPI acts as a single point to communicate with JIRA and extract the version information
+ * for use with the ChangelogBuilder. 
  */
 public class JiraAPI
 {
@@ -57,6 +59,11 @@ public class JiraAPI
   
   
   /**
+   * Communicate with JIRA to find all versions prior to the version you are currently building
+   * for each version found get a list of issues fixed in that version from the serialized java object
+   * cache on disk, or pull the list of issues from JIRA. Finally add all these versions to a LinkedList
+   * and sort by date descending.
+   * 
    * @param projectKey The key used for the project in JIRA.
    * @param versionLabel The version label from JIRA (belonging to the project specified with projectKey
    * that you are currently building).
@@ -64,11 +71,16 @@ public class JiraAPI
   public void fetchVersionDetails(String projectKey, String versionLabel)
   { 
     try {
+      // Create the initial JIRA connection.
       final JerseyJiraRestClientFactory factory = new JerseyJiraRestClientFactory();
       final JiraRestClient restClient = factory.createWithBasicHttpAuthentication(jiraServerURI_, username_, password_);
       final NullProgressMonitor pm = new NullProgressMonitor();
+
+      // Get an instance of the JIRA Project
       Project proj = restClient.getProjectClient().getProject(projectKey, pm);
       
+      // Get a list of versions for this project and identify the one were currently trying to build.
+      // when weve found it set its release date to now and mark it as released.
       Version buildVersion = null;
       for (Version v : proj.getVersions()) {
         if (v.getName().equals(versionLabel)) {
@@ -76,16 +88,21 @@ public class JiraAPI
           VersionInputBuilder vib = new VersionInputBuilder(projectKey, buildVersion);
           vib.setReleased(true);
           vib.setReleaseDate(new DateTime());
-          //restClient.getVersionRestClient().updateVersion(v.getSelf(), vib.build(), pm);
+          restClient.getVersionRestClient().updateVersion(v.getSelf(), vib.build(), pm);
         }
       }
       
       if (buildVersion == null) {
-        throw new RuntimeException("Could not find a version in JIRA matching the version label argument: \"" + versionLabel + "\".");
+        System.err.println("Could not find a version in JIRA matching the version label argument: \"" + versionLabel + "\".");
+        System.exit(1);
       }
       
       versionList_ = new LinkedList<VersionInfo>();
       VersionInfoCache cache = new VersionInfoCache(projectKey, "U:\\object_cache");
+      
+      // For each version determine if it was released prior to the current build. If so get a list of issues fixed in it and 
+      // and add it to a LinkedList. If the version has been previously cached the data will be pulled from the cache.
+      // the version being currently built will never be pulled from the cache.
       for (Version v : proj.getVersions()) {
         if (v.getReleaseDate() != null && v.isReleased()) { 
           if (v.getReleaseDate().isBefore(buildVersion.getReleaseDate()) || v.getReleaseDate().isEqual(buildVersion.getReleaseDate())) {
@@ -94,7 +111,7 @@ public class JiraAPI
             // to generate a changelog for the current version then build/rebuild and cache.
             VersionInfo vi = cache.getCached(v.getName());
             if (vi == null || v.getName().equals(versionLabel)) {
-              List<String> issueList = new ArrayList<String>();
+              LinkedList<String> issueList = new LinkedList<String>();
               SearchResult sr = restClient.getSearchClient().searchJql("project = '" + projectKey + "' and fixVersion = '" + v.getName() + "'", pm);
               
               for (BasicIssue bi : sr.getIssues()) {
@@ -121,20 +138,41 @@ public class JiraAPI
         }
       }
   
-      // Sort the version by release date.
+      // Sort the version by release date descending.
       Collections.sort(versionList_, new DateComparator());
     } catch (RestClientException uh) {
-      System.err.println("The JIRA instance is not reacable using the URL - \"" + jiraServerURI_ + "\".");
+      // Awful error handling block becase all errors seem to be of exception type RestClientException.
+      
+      if (uh.getMessage().startsWith("No project could be found with key")) {
+        System.err.println("A project with the key \"" + projectKey + "\" could not be found in the JIRA instance at \"" + jiraServerURI_ + "\".");
+        System.exit(1);
+      }
+      
+      if (uh.getMessage().startsWith("com.sun.jersey.api.client.ClientHandlerException: java.net.UnknownHostException:")) {
+        System.err.println("A JIRA instance could not be reached at \"" + jiraServerURI_ + "\".");
+        System.exit(1);
+      }
+      
+      uh.printStackTrace();
       System.exit(1);
     }
   }
   
+  /**
+   * @return LinkedList of VersionInfo instances giving details about each JIRA version
+   * to be included in the change log and their issues. Ordered descending by release date.
+   */
   public LinkedList<VersionInfo> getVersionInfoList()
   {
     return versionList_;
   }
 }
 
+/**
+ * @author leonmi
+ *
+ * Simple comparator that can be used to order by Date objects descending.
+ */
 class DateComparator implements Comparator<VersionInfo>
 {
   public int compare(VersionInfo a, VersionInfo b)

@@ -1,41 +1,64 @@
 package net.foxopen.jira.changelog;
 
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * @author leonmi
+ *
+ * Basic class to store metadata about a JIRA version including label, description
+ * release date and issues that were fixed in this version.
+ * 
+ * This class is serializable and will be serialized to cache the results.
+ */
 public class VersionInfo implements Serializable
 {
   private static final long serialVersionUID = 4317403361667148998L;
  
-  private String label_;
+  private String name_;
   private String description_;
   private Date releaseDate_;
-  private List<String> issueList_;
+  private LinkedList<String> issueList_;
   
-  public VersionInfo(String label, String description, Date releaseDate, List<String> issueList)
+  public VersionInfo(String name, String description, Date releaseDate, LinkedList<String> issueList)
   {
-    label_ = label;
+    name_ = name;
     description_ = description;
     releaseDate_ = releaseDate;
     issueList_ = issueList; 
+    Collections.sort(issueList_);
   }
   
-  public String getLabel()
+  /**
+   * @return the name of this JIRA version.
+   */
+  public String getName()
   {
-    return label_;
+    return name_;
   }
   
+  /**
+   * @return the description of this JIRA version.
+   */
   public String getDescription()
   {
     return description_;
   }
   
+  /**
+   * @return the release date of this JIRA version.
+   */
   public Date getReleaseDate()
   {
     return releaseDate_;
   }
   
+  /**
+   * @return the list of issues fixed in this JIRA version.
+   */
   public List<String> getIssueList()
   {
     return issueList_;

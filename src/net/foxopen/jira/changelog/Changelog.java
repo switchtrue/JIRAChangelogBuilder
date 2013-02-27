@@ -1,8 +1,5 @@
 package net.foxopen.jira.changelog;
 
-
-// Without caching 431392 ms - 7.2 minutes 
-
 public class Changelog
 {
   public static void main(String[] args) 

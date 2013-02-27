@@ -23,7 +23,7 @@ public class VersionInfoCache
   public void cache(VersionInfo vi)
   {
     try {
-      FileOutputStream fileOut = new FileOutputStream(cachePath_ + projectKey_ + "_"+ vi.getLabel() + SERIALIZED_OBJECT_EXT);
+      FileOutputStream fileOut = new FileOutputStream(cachePath_ + projectKey_ + "_"+ vi.getName() + SERIALIZED_OBJECT_EXT);
       ObjectOutputStream out = new ObjectOutputStream(fileOut);
       out.writeObject(vi);
       out.close();
