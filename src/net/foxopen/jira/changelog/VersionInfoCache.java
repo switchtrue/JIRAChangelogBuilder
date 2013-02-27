@@ -1,5 +1,6 @@
 package net.foxopen.jira.changelog;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -23,6 +24,7 @@ public class VersionInfoCache
   
   /**
    * Constructor to create a cache for this JIRA project.
+   * The cache will be located at the cachePath set, if this directory does not exist, it will be created.
    * 
    * @param projectKey key used for this project in JIRA.
    * @param cachePath path on disk to the cache.
@@ -31,12 +33,13 @@ public class VersionInfoCache
   {
     projectKey_ = projectKey;
     cachePath_ = cachePath + "\\";
+    (new File(cachePath_)).mkdirs();
   }
   
   /**
    * Cache a given VersionInfo object by serialising it to disk with a file name of projectkey_versionname.ser.
    * 
-   * @param versionInfo the VersionInfo isntance to be cached.
+   * @param versionInfo the VersionInfo instance to be cached.
    */
   public void cache(VersionInfo versionInfo)
   {
