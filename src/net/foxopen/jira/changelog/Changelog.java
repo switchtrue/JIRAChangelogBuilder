@@ -2,6 +2,20 @@ package net.foxopen.jira.changelog;
 
 public class Changelog
 {
+  /**
+   * Generate a change log based off a project and version in JIRA.
+   * @param args
+   * <code>
+   * Usage:
+   * java -jar jira-changelog-builder.jar <version_file_path> <JIRA_project_name> <JIRA_URL> <JIRA_username> <JIRA_password>
+   * 
+   * <version_file_path>: The fully qualified path in which to find the version file as described in step 1.
+   * <JIRA_project_name>: The name of the project in JIRA.
+   * <JIRA_URL>: The URL of the JIRA instance (e.g. https://somecompany.atlassian.net).
+   * <JIRA_username>: The username used to log into JIRA.
+   * <JIRA_password>: The password used to log into JIRA.
+   * </code>
+   */
   public static void main(String[] args) 
   { 
     final String versionFilePath = args[0];
@@ -16,7 +30,7 @@ public class Changelog
     jiraApi.fetchVersionDetails(jiraProjectName, versionLabel);
     
     ChangelogBuilder clWriter = new ChangelogBuilder();
-    clWriter.build(jiraApi.getVersionInfoList(), versionLabel);
+    clWriter.build(jiraApi.getVersionInfoList());
     clWriter.print();
     
     System.exit(0);

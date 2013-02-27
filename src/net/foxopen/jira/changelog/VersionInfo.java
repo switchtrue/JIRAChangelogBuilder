@@ -23,6 +23,15 @@ public class VersionInfo implements Serializable
   private Date releaseDate_;
   private LinkedList<String> issueList_;
   
+  /**
+   * VersionInfo constructor accepting all require information as parameters. This also ensures that the list
+   * of issues fixed in this version are sorted.
+   * 
+   * @param name of the JIRA project version.
+   * @param description of the JIRA project version. 
+   * @param releaseDate of the JIRA project version.
+   * @param issueList issues fixed in the JIRA project version.
+   */
   public VersionInfo(String name, String description, Date releaseDate, LinkedList<String> issueList)
   {
     name_ = name;
