@@ -7,9 +7,9 @@ public class Changelog
    * @param args
    * <code>
    * Usage:
-   * java -jar jira-changelog-builder.jar <version_file_path> <JIRA_project_name> <JIRA_URL> <JIRA_username> <JIRA_password>
+   * java -jar jira-changelog-builder.jar <version> <JIRA_project_name> <JIRA_URL> <JIRA_username> <JIRA_password>
    * 
-   * <version_file_path>: The fully qualified path in which to find the version file as described in step 1.
+   * <version>: The name of the version this changelog is for.
    * <JIRA_project_name>: The name of the project in JIRA.
    * <JIRA_URL>: The URL of the JIRA instance (e.g. https://somecompany.atlassian.net).
    * <JIRA_username>: The username used to log into JIRA.
@@ -18,7 +18,7 @@ public class Changelog
    */
   public static void main(String[] args) 
   { 
-    final String versionFilePath = args[0];
+    final String versionName = args[0];
     final String jiraProjectKey  = args[1];
     final String jiraURL         = args[2];
     final String jiraUsername    = args[3];
@@ -26,14 +26,12 @@ public class Changelog
     String objectCachePath = null; // Optional so make sure this is last and handle in try/catch below.
     try { objectCachePath = args[5]; } catch (ArrayIndexOutOfBoundsException e) {} 
     
-    String versionLabel = VersionReader.getRelease(versionFilePath);
-    
     JiraAPI jiraApi = new JiraAPI(jiraUsername, jiraPassword, jiraURL);
     if (objectCachePath != null) {
       VersionInfoCache cache = new VersionInfoCache(jiraProjectKey, objectCachePath);
       jiraApi.setVersionInfoCache(cache);
     }
-    jiraApi.fetchVersionDetails(jiraProjectKey, versionLabel);
+    jiraApi.fetchVersionDetails(jiraProjectKey, versionName);
     
     ChangelogBuilder clWriter = new ChangelogBuilder();
     clWriter.build(jiraApi.getVersionInfoList());
