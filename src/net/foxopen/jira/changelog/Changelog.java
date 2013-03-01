@@ -37,6 +37,8 @@ public class Changelog
     clWriter.build(jiraApi.getVersionInfoList());
     clWriter.print();
     
+    jiraApi.releaseVersion(jiraProjectKey, versionName);
+    
     System.exit(0);
   }
 }

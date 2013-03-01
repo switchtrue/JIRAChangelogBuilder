@@ -32,7 +32,9 @@ public class VersionInfoCache
   public VersionInfoCache(String projectKey, String cachePath)
   {
     projectKey_ = projectKey;
-    cachePath_ = cachePath + "\\";
+    
+    String fileSeparator = System.getProperty("file.separator");
+    cachePath_ = cachePath.endsWith(fileSeparator) ? cachePath : cachePath + fileSeparator;    
     (new File(cachePath_)).mkdirs();
   }
   

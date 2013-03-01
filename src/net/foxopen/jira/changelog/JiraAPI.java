@@ -83,15 +83,10 @@ public class JiraAPI
       Project proj = restClient.getProjectClient().getProject(projectKey, pm);
       
       // Get a list of versions for this project and identify the one were currently trying to build.
-      // when weve found it set its release date to now and mark it as released.
       Version buildVersion = null;
       for (Version v : proj.getVersions()) {
         if (v.getName().equals(versionLabel)) {
           buildVersion = v;
-          VersionInputBuilder vib = new VersionInputBuilder(projectKey, buildVersion);
-          vib.setReleased(true);
-          vib.setReleaseDate(new DateTime());
-          restClient.getVersionRestClient().updateVersion(v.getSelf(), vib.build(), pm);
         }
       }
       
@@ -107,8 +102,12 @@ public class JiraAPI
       // and add it to a LinkedList. If the version has been previously cached the data will be pulled from the cache.
       // the version being currently built will never be pulled from the cache.
       for (Version v : proj.getVersions()) {
-        if (v.getReleaseDate() != null && v.isReleased()) { 
-          if (v.getReleaseDate().isBefore(buildVersion.getReleaseDate()) || v.getReleaseDate().isEqual(buildVersion.getReleaseDate())) {
+        if ((v.getReleaseDate() != null && v.isReleased()) || v.getName().equals(versionLabel)) { 
+          DateTime versionReleaseDate = v.getReleaseDate();
+          if (versionReleaseDate == null) {
+            versionReleaseDate = new DateTime();
+          }
+          if (v.getName().equals(versionLabel) || versionReleaseDate.isBefore(buildVersion.getReleaseDate()) || versionReleaseDate.isEqual(buildVersion.getReleaseDate())) {
             
             // Attempt to get the changelog from the cache. If it can't be found or were trying
             // to generate a changelog for the current version then build/rebuild and cache.
@@ -134,7 +133,7 @@ public class JiraAPI
                 issueList.add("[" + i.getKey() + "] " + changelogDescription);
               }
               
-              vi = new VersionInfo(v.getName(), v.getDescription(), v.getReleaseDate().toDate(), issueList);
+              vi = new VersionInfo(v.getName(), v.getDescription(), versionReleaseDate.toDate(), issueList);
               if (cache_ != null) {
                 cache_.cache(vi);
               }
@@ -148,6 +147,7 @@ public class JiraAPI
   
       // Sort the version by release date descending.
       Collections.sort(versionList_, new DateComparator());
+      
     } catch (RestClientException uh) {
       // Awful error handling block becase all errors seem to be of exception type RestClientException.
       
@@ -173,6 +173,46 @@ public class JiraAPI
   public LinkedList<VersionInfo> getVersionInfoList()
   {
     return versionList_;
+  }
+  
+  public void releaseVersion(String projectKey, String versionLabel)
+  {
+    try {
+      // Create the initial JIRA connection.
+      final JerseyJiraRestClientFactory factory = new JerseyJiraRestClientFactory();
+      final JiraRestClient restClient = factory.createWithBasicHttpAuthentication(jiraServerURI_, username_, password_);
+      final NullProgressMonitor pm = new NullProgressMonitor();
+  
+      // Get an instance of the JIRA Project
+      Project proj = restClient.getProjectClient().getProject(projectKey, pm);
+      
+      // Get a list of versions for this project and identify the one were currently trying to build.
+      Version buildVersion = null;
+      for (Version v : proj.getVersions()) {
+        if (v.getName().equals(versionLabel)) {
+          buildVersion = v;
+          VersionInputBuilder vib = new VersionInputBuilder(projectKey, buildVersion);
+          vib.setReleased(true);
+          vib.setReleaseDate(new DateTime());
+          restClient.getVersionRestClient().updateVersion(v.getSelf(), vib.build(), pm);
+        }
+      }
+    } catch (RestClientException uh) {
+      // Awful error handling block becase all errors seem to be of exception type RestClientException.
+      
+      if (uh.getMessage().startsWith("No project could be found with key")) {
+        System.err.println("A project with the key \"" + projectKey + "\" could not be found in the JIRA instance at \"" + jiraServerURI_ + "\".");
+        System.exit(1);
+      }
+      
+      if (uh.getMessage().startsWith("com.sun.jersey.api.client.ClientHandlerException: java.net.UnknownHostException:")) {
+        System.err.println("A JIRA instance could not be reached at \"" + jiraServerURI_ + "\".");
+        System.exit(1);
+      }
+      
+      uh.printStackTrace();
+      System.exit(1);
+    }
   }
 }
 
