@@ -25,11 +25,13 @@ public class ChangelogBuilder
     changelogStringBuilder_ = new StringBuilder();
    
     for (VersionInfo vi : versionInfoList) {
-      buildChangelogHeader(vi.getReleaseDate(), vi.getName(), vi.getDescription());
-      for (String issue : vi.getIssueList()) {
-        buildChangelogItem(issue);
+      if (vi.hasIssues()) {
+        buildChangelogHeader(vi.getReleaseDate(), vi.getName(), vi.getDescription());
+        for (String issue : vi.getIssueList()) {
+          buildChangelogItem(issue);
+        }
+        finaliseChangelog();
       }
-      finaliseChangelog();
     }
   }
   

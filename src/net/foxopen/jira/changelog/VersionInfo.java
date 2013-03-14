@@ -72,4 +72,9 @@ public class VersionInfo implements Serializable
   {
     return issueList_;
   }
+  
+  public boolean hasIssues()
+  {
+    return !issueList_.isEmpty();
+  }
 }
