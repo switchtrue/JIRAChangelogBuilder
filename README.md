@@ -6,14 +6,12 @@ Communicates with JIRA and generates a change log for a given JIRA Project Versi
 Usage
 -----
 
-1) Create a file that contains the JIRA version label to build, this file can contain any number of lines starting with # (these are treated as comments) and any number of empty lines. The first non-comment, non-empty line will be trimmed and used as the JIRA project version name.
-
-2) From the command line:
+From the command line:
 
     java -jar jira-changelog-builder.jar <version> <JIRA_project_name> <JIRA_URL>
-            <JIRA_username> <JIRA_password> <flags>
+            <JIRA_username> <JIRA_password> [<flags>]
   
-Where all arguments are used as follows:
+Where the arguments are used as follows:
   
   *  `<version>`: The name of the version this changelog is for.
   *  `<JIRA_project_name>`: The name of the project in JIRA.
