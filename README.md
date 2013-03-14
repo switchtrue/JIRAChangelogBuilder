@@ -22,3 +22,4 @@ Where the arguments are used as follows:
     * `--object-cache-path /some/path`: The path on disk to the cache, if you do not use this, no cache will be used. Using a cache is highly recommended.
     * `--no-release`: Dont mark the version in JIRA as released and dont set the release date. Ideal for testing.
     * `--issue-type-ignore CSV,issuetype,list`: A CSV of issue types to ignore when building the changelog.
+    * `--debug`: Print debug/logging information to standard out. This will also force errors to go to the standard out and exit with code 0 rather than 1.
