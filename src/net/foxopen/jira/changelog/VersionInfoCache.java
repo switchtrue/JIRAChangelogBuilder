@@ -31,9 +31,11 @@ public class VersionInfoCache
    */
   public VersionInfoCache(String projectKey, String cachePath)
   {
+    Logger.log("Creating version info cache.");
     projectKey_ = projectKey;
     
     String fileSeparator = System.getProperty("file.separator");
+    Logger.log("Using system file path separator of '" + fileSeparator + "'");
     cachePath_ = cachePath.endsWith(fileSeparator) ? cachePath : cachePath + fileSeparator;    
     (new File(cachePath_)).mkdirs();
   }
@@ -45,8 +47,10 @@ public class VersionInfoCache
    */
   public void cache(VersionInfo versionInfo)
   {
+    String filename = cachePath_ + projectKey_ + "_"+ versionInfo.getName() + SERIALIZED_OBJECT_EXT;
+    Logger.log("Caching version changelog for version '" + versionInfo.getName() + "' in file: " + filename);
     try {
-      FileOutputStream fileOut = new FileOutputStream(cachePath_ + projectKey_ + "_"+ versionInfo.getName() + SERIALIZED_OBJECT_EXT);
+      FileOutputStream fileOut = new FileOutputStream(filename);
       ObjectOutputStream out = new ObjectOutputStream(fileOut);
       out.writeObject(versionInfo);
       out.close();
@@ -71,10 +75,13 @@ public class VersionInfoCache
       vi = (VersionInfo) in.readObject();
       in.close();
       fileIn.close();
+      Logger.log("Cache hit for '" + versionName + "'");
       return vi;
     } catch (FileNotFoundException fnf) {
+      Logger.log("Cache miss for '" + versionName + "'");
       return null; // OK, don't use cache.
     } catch(IOException i) {
+      Logger.log("Cache miss for '" + versionName + "'");
       return null; // OK, don't use cache.
     } catch(ClassNotFoundException c) {
       System.out.println("VersionInfo class could not be found during deserialization.");

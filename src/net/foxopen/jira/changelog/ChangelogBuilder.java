@@ -40,7 +40,7 @@ public class ChangelogBuilder
    */
   public void print()
   {
-    System.out.println(changelogStringBuilder_.toString());
+    System.out.println(changelogStringBuilder_.toString().trim());
   }
   
   /**
