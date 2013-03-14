@@ -15,6 +15,11 @@ public class Changelog
    * <JIRA_username>: The username used to log into JIRA.
    * <JIRA_password>: The password used to log into JIRA.
    * </code>
+   * 
+   * --issue-type-ignore Test
+   * --debug
+   * --no-update-jira
+   * --object-cache-path
    */
   public static void main(String[] args) 
   { 
@@ -23,10 +28,29 @@ public class Changelog
     final String jiraURL         = args[2];
     final String jiraUsername    = args[3];
     final String jiraPassword    = args[4];
-    String objectCachePath = null; // Optional so make sure this is last and handle in try/catch below.
-    try { objectCachePath = args[5]; } catch (ArrayIndexOutOfBoundsException e) {} 
     
-    JiraAPI jiraApi = new JiraAPI(jiraUsername, jiraPassword, jiraURL);
+    // Handle optional flags
+    boolean setReleasedInJira = true;
+    String objectCachePath = null;
+    
+    boolean skipNextArg = false;
+    for (int i = 5; i < args.length; i++) {
+      if (skipNextArg == true) {
+        skipNextArg = false;
+        continue;
+      }
+      
+      String currentArg = args[i];
+      
+      if (currentArg.equals("--no-release")) {
+        setReleasedInJira = false;
+      } else if (currentArg.equals("--object-cache-path")) {
+        skipNextArg = true;
+        objectCachePath = args[i+1];
+      }
+    }
+    
+    JiraAPI jiraApi = new JiraAPI(jiraUsername, jiraPassword, jiraURL, setReleasedInJira);
     if (objectCachePath != null) {
       VersionInfoCache cache = new VersionInfoCache(jiraProjectKey, objectCachePath);
       jiraApi.setVersionInfoCache(cache);
