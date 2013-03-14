@@ -11,7 +11,7 @@ Usage
 2) From the command line:
 
     java -jar jira-changelog-builder.jar <version> <JIRA_project_name> <JIRA_URL>
-            <JIRA_username> <JIRA_password> [<path_to_cache>]
+            <JIRA_username> <JIRA_password> <flags>
   
 Where all arguments are used as follows:
   
@@ -20,4 +20,7 @@ Where all arguments are used as follows:
   *  `<JIRA_URL>`: The URL of the JIRA instance (e.g. https://somecompany.atlassian.net).
   *  `<JIRA_username>`: The username used to log into JIRA.
   *  `<JIRA_password>`: The password used to log into JIRA.
-  *  `<path_to_cache>` (optional): The path on disk to the cache, if you do not use this, no cache will be used. Using a cache is highly recommended.
+  *  `<flags>` (optional): One or more of the following flags:
+    * `--object-cache-path /some/path`: The path on disk to the cache, if you do not use this, no cache will be used. Using a cache is highly recommended.
+    * `--no-release`: Dont mark the version in JIRA as released and dont set the release date. Ideal for testing.
+    * `--issue-type-ignore CSV,issuetype,list`: A CSV of issue types to ignore when building the changelog.
