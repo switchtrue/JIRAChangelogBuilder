@@ -82,7 +82,22 @@ public class ChangelogBuilder
    */
   private void buildChangelogItem(String description)
   {
-    changelogStringBuilder_.append("    - " + description);
+    String formattedDescription = "    - " + description;
+    
+    // If the change log has new lines in it, pad the new lines with white space equal to the indent and issuse key
+    // so that the changelog description for a given issue lines up neatly.
+    if (description.indexOf("\n") > 0) {
+      int padding = formattedDescription.indexOf("] ") + 2;
+      
+      String whitespace = "\n";
+      for (int i = 0; i < padding; i++) {
+        whitespace += " ";
+      }
+      
+      formattedDescription = formattedDescription.replaceAll("\n", whitespace);
+    }
+
+    changelogStringBuilder_.append(formattedDescription);
     changelogStringBuilder_.append(LS);
   }
   
