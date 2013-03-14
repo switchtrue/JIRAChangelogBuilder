@@ -2,8 +2,10 @@ package net.foxopen.jira.changelog;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.LinkedList;
 
 import org.joda.time.DateTime;
@@ -30,6 +32,7 @@ public class JiraAPI
   private final String username_, password_;
   private final URI jiraServerURI_;
   private boolean setReleasedInJira_;
+  private HashSet<String> issueTypeIgnoreSet_;
   private LinkedList<VersionInfo> versionList_;
   private VersionInfoCache cache_;
   
@@ -41,7 +44,7 @@ public class JiraAPI
    * @param password The password used to authenticate with JIRA.
    * @param URL The URL pointing to the JIRA instance.
    */
-  public JiraAPI(String username, String password, String URL, boolean setReleasedInJira)
+  public JiraAPI(String username, String password, String URL, boolean setReleasedInJira, String ignoreIssueTypeCsv)
   {
     username_ = username;
     password_ = password;
@@ -55,6 +58,8 @@ public class JiraAPI
       jiraServerURI_ = tempURI;
     }
     setReleasedInJira_ = setReleasedInJira;
+    issueTypeIgnoreSet_ = new HashSet<String>();
+    issueTypeIgnoreSet_.addAll(Arrays.asList(ignoreIssueTypeCsv.split(",")));
   }
   
   public void setVersionInfoCache(VersionInfoCache cache) 
@@ -99,7 +104,6 @@ public class JiraAPI
       
       versionList_ = new LinkedList<VersionInfo>();
       
-      
       // For each version determine if it was released prior to the current build. If so get a list of issues fixed in it and 
       // and add it to a LinkedList. If the version has been previously cached the data will be pulled from the cache.
       // the version being currently built will never be pulled from the cache.
@@ -123,17 +127,19 @@ public class JiraAPI
               
               for (BasicIssue bi : sr.getIssues()) {
                 Issue i = restClient.getIssueClient().getIssue(bi.getKey(), pm);
-                System.out.println(i.getIssueType().getName());
                 
-                String changelogDescription;
-                try {
-                  changelogDescription = i.getFieldByName("Changelog Description").getValue().toString();
-                } catch (NullPointerException npe) {
-                  // Changelog Description doesn't exist as a field for this issue so just default to the summary. 
-                  changelogDescription = i.getSummary();
+                // Only add this issue if its not in the ignore list.
+                if (!issueTypeIgnoreSet_.contains(i.getIssueType().getName())) {
+                  String changelogDescription;
+                  try {
+                    changelogDescription = i.getFieldByName("Changelog Description").getValue().toString();
+                  } catch (NullPointerException npe) {
+                    // Changelog Description doesn't exist as a field for this issue so just default to the summary. 
+                    changelogDescription = i.getSummary();
+                  }
+                  
+                  issueList.add("[" + i.getKey() + "] " + changelogDescription);
                 }
-                
-                issueList.add("[" + i.getKey() + "] " + changelogDescription);
               }
               
               vi = new VersionInfo(v.getName(), v.getDescription(), versionReleaseDate.toDate(), issueList);

@@ -30,6 +30,8 @@ public class Changelog
     final String jiraPassword    = args[4];
     
     // Handle optional flags
+    String issueTypeIgnoreList = "";
+//    boolean debug = false;
     boolean setReleasedInJira = true;
     String objectCachePath = null;
     
@@ -42,7 +44,12 @@ public class Changelog
       
       String currentArg = args[i];
       
-      if (currentArg.equals("--no-release")) {
+      if (currentArg.equals("--issue-type-ignore")) {
+        issueTypeIgnoreList = args[i+1];
+        skipNextArg = true;
+//      } else if (currentArg.equals("--debug")) {
+//        debug = true;
+      } else if (currentArg.equals("--no-release")) {
         setReleasedInJira = false;
       } else if (currentArg.equals("--object-cache-path")) {
         skipNextArg = true;
@@ -50,7 +57,7 @@ public class Changelog
       }
     }
     
-    JiraAPI jiraApi = new JiraAPI(jiraUsername, jiraPassword, jiraURL, setReleasedInJira);
+    JiraAPI jiraApi = new JiraAPI(jiraUsername, jiraPassword, jiraURL, setReleasedInJira, issueTypeIgnoreList);
     if (objectCachePath != null) {
       VersionInfoCache cache = new VersionInfoCache(jiraProjectKey, objectCachePath);
       jiraApi.setVersionInfoCache(cache);
