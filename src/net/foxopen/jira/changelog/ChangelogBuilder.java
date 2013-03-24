@@ -99,7 +99,7 @@ public class ChangelogBuilder
       formattedDescription = formattedDescription.replaceAll("\n", whitespace);
     }
 
-    changelogStringBuilder_.append(formattedDescription);
+    changelogStringBuilder_.append(formattedDescription.trim());
     changelogStringBuilder_.append(LS);
   }
   
