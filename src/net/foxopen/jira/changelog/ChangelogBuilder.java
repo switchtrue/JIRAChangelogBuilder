@@ -84,9 +84,9 @@ public class ChangelogBuilder
    */
   private void buildChangelogItem(String description)
   {
-    String formattedDescription = "    - " + description;
+    String formattedDescription = "- " + description;
     
-    // If the change log has new lines in it, pad the new lines with white space equal to the indent and issuse key
+    // If the change log has new lines in it, pad the new lines with white space equal to the indent and issue key
     // so that the changelog description for a given issue lines up neatly.
     if (description.indexOf("\n") > 0) {
       int padding = formattedDescription.indexOf("] ") + 2;
