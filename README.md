@@ -3,6 +3,11 @@ JIRAChangelogBuilder
 
 Communicates with JIRA and generates a change log for a given JIRA Project Version
 
+Compilation
+-----------
+
+Run 'ant' from the base directory to generate build/jira-changelog-builder.jar
+
 Usage
 -----
 
