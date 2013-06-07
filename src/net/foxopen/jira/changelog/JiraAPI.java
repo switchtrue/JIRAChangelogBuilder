@@ -31,7 +31,6 @@ public class JiraAPI
 {
   private final String username_, password_;
   private final URI jiraServerURI_;
-  private boolean setReleasedInJira_;
   private HashSet<String> issueTypeIgnoreSet_;
   private LinkedList<VersionInfo> versionList_;
   private VersionInfoCache cache_;
@@ -44,7 +43,7 @@ public class JiraAPI
    * @param password The password used to authenticate with JIRA.
    * @param URL The URL pointing to the JIRA instance.
    */
-  public JiraAPI(String username, String password, String URL, boolean setReleasedInJira, String ignoreIssueTypeCsv)
+  public JiraAPI(String username, String password, String URL, String ignoreIssueTypeCsv)
   {
     username_ = username;
     password_ = password;
@@ -56,7 +55,6 @@ public class JiraAPI
     } finally {
       jiraServerURI_ = tempURI;
     }
-    setReleasedInJira_ = setReleasedInJira;
     issueTypeIgnoreSet_ = new HashSet<String>();
     issueTypeIgnoreSet_.addAll(Arrays.asList(ignoreIssueTypeCsv.split(",")));
   }
@@ -190,49 +188,6 @@ public class JiraAPI
     return versionList_;
   }
   
-  public void releaseVersion(String projectKey, String versionLabel)
-  {
-    if (setReleasedInJira_) {
-      try {
-        // Create the initial JIRA connection.
-        Logger.log("Establishing JIRA API connection for releasing version '" + versionLabel + "' via " + jiraServerURI_ + ".");
-        final JerseyJiraRestClientFactory factory = new JerseyJiraRestClientFactory();
-        final JiraRestClient restClient = factory.createWithBasicHttpAuthentication(jiraServerURI_, username_, password_);
-        final NullProgressMonitor pm = new NullProgressMonitor();
-    
-        // Get an instance of the JIRA Project
-        Logger.log("Obtaining project information via JIRA API.");
-        Project proj = restClient.getProjectClient().getProject(projectKey, pm);
-        
-        // Get a list of versions for this project and identify the one were currently trying to build.
-        Version buildVersion = null;
-        for (Version v : proj.getVersions()) {
-          if (v.getName().equals(versionLabel)) {
-            Logger.log("Marking version '" + versionLabel + "' in JIRA as released and setting release date to now via JIRA API.");
-            buildVersion = v;
-            VersionInputBuilder vib = new VersionInputBuilder(projectKey, buildVersion);
-            vib.setReleased(true);
-            vib.setReleaseDate(new DateTime());
-            restClient.getVersionRestClient().updateVersion(v.getSelf(), vib.build(), pm);
-            Logger.log("Version updated successfully via JIRA API.");
-          }
-        }
-      } catch (RestClientException uh) {
-        // Awful error handling block becase all errors seem to be of exception type RestClientException.
-        
-        if (uh.getMessage().startsWith("No project could be found with key")) {
-          Logger.err("A project with the key \"" + projectKey + "\" could not be found in the JIRA instance at \"" + jiraServerURI_ + "\".");
-        }
-        
-        if (uh.getMessage().startsWith("com.sun.jersey.api.client.ClientHandlerException: java.net.UnknownHostException:")) {
-          Logger.err("A JIRA instance could not be reached at \"" + jiraServerURI_ + "\".");
-        }
-        
-        uh.printStackTrace();
-        System.exit(1);
-      }
-    }
-  }
 }
 
 /**

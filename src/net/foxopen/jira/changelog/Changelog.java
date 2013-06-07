@@ -38,7 +38,6 @@ public class Changelog
     
     // Handle optional flags
     String issueTypeIgnoreList = "";
-    boolean setReleasedInJira = true;
     String objectCachePath = null;
     
     boolean skipNextArg = false;
@@ -54,9 +53,6 @@ public class Changelog
         issueTypeIgnoreList = args[i+1];
         skipNextArg = true;
         Logger.log("--issue-type-ignore flag found. Ignoring issue types: " + issueTypeIgnoreList);
-      } else if (currentArg.equals("--no-release")) {
-        setReleasedInJira = false;
-        Logger.log("--no-release flag found. JIRA version will not be marked as released or have release date set.");
       } else if (currentArg.equals("--object-cache-path")) {
         skipNextArg = true;
         objectCachePath = args[i+1];
@@ -72,7 +68,7 @@ public class Changelog
         "\n  JIRA password: " + jiraPassword.substring(0, 1) + "*****" + jiraPassword.substring(jiraPassword.length() - 1)
         );
     
-    JiraAPI jiraApi = new JiraAPI(jiraUsername, jiraPassword, jiraURL, setReleasedInJira, issueTypeIgnoreList);
+    JiraAPI jiraApi = new JiraAPI(jiraUsername, jiraPassword, jiraURL, issueTypeIgnoreList);
     if (objectCachePath != null) {
       VersionInfoCache cache = new VersionInfoCache(jiraProjectKey, objectCachePath);
       jiraApi.setVersionInfoCache(cache);
@@ -85,7 +81,6 @@ public class Changelog
     Logger.log("Writing changelog to standard out.");
     clWriter.print();
     
-    jiraApi.releaseVersion(jiraProjectKey, versionName);
     Logger.log("Done - Success!");
     System.exit(0);
   }
