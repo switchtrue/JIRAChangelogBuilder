@@ -18,45 +18,51 @@ public class Changelog
    * 
    * --issue-type-ignore Test
    * --debug
-   * --no-update-jira
    * --object-cache-path
    */
+  
   public static void main(String[] args) 
   { 
-    final String versionName = args[0];
-    final String jiraProjectKey  = args[1];
-    final String jiraURL         = args[2];
-    final String jiraUsername    = args[3];
-    final String jiraPassword    = args[4];
     
-    for (int i = 5; i < args.length; i++) {
-      if (args[i].equals("--debug")) {
-        Logger.enable();
-        Logger.log("--debug flag found. Debug logging enable.");
-      }
+    if ( args.length < 5 ) {
+      System.out.println("Not enough arguments given.");
+      System.out.println("Usage:");
+      System.out.println("java -jar jira-changelog-builder.jar <version> <JIRA_project_name> <JIRA_URL> <JIRA_username> <JIRA_password> [<flags>]");
+      System.out.println("<version>: The name of the version this changelog is for.");
+      System.out.println("<JIRA_project_name>: The name of the project in JIRA.");
+      System.out.println("<JIRA_URL>: The URL of the JIRA instance (e.g. https://somecompany.atlassian.net).");
+      System.out.println("<JIRA_username>: The username used to log into JIRA.");
+      System.out.println("<JIRA_password>: The password used to log into JIRA.");
+      System.out.println("<flags> (optional): One or more of the following flags:");
+      System.out.println("\t--object-cache-path /some/path: The path on disk to the cache, if you do not use this, no cache will be used. Using a cache is highly recommended.");
+      System.out.println("\t--issue-type-ignore CSV,issuetype,list: A CSV of issue types to ignore when building the changelog.");
+      System.out.println("\t--debug: Print debug/logging information to standard out. This will also force errors to go to the standard out and exit with code 0 rather than 1.");
+      System.exit(1);
     }
+    
+    int currentArgument = 0;
+    final String versionName     = args[currentArgument++];
+    final String jiraProjectKey  = args[currentArgument++];
+    final String jiraURL         = args[currentArgument++];
+    final String jiraUsername    = args[currentArgument++];
+    final String jiraPassword    = args[currentArgument++];
     
     // Handle optional flags
     String issueTypeIgnoreList = "";
     String objectCachePath = null;
-    
-    boolean skipNextArg = false;
-    for (int i = 5; i < args.length; i++) {
-      if (skipNextArg == true) {
-        skipNextArg = false;
-        continue;
-      }
-      
-      String currentArg = args[i];
-      
-      if (currentArg.equals("--issue-type-ignore")) {
-        issueTypeIgnoreList = args[i+1];
-        skipNextArg = true;
+    for (; currentArgument < args.length; currentArgument++) {
+      if (args[currentArgument].equals("--debug")) {
+        Logger.enable();
+        Logger.log("--debug flag found. Debug logging enabled.");
+      } else if (args[currentArgument].equals("--issue-type-ignore")) {
+        issueTypeIgnoreList = args[++currentArgument];
         Logger.log("--issue-type-ignore flag found. Ignoring issue types: " + issueTypeIgnoreList);
-      } else if (currentArg.equals("--object-cache-path")) {
-        skipNextArg = true;
-        objectCachePath = args[i+1];
+      } else if (args[currentArgument].equals("--object-cache-path")) {
+        objectCachePath = args[++currentArgument];
         Logger.log("--object-cache-path flag found. Using " + objectCachePath + " as the object cache.");
+      } else {
+        Logger.err("Unknown argument: " + args[currentArgument]);
+        System.exit(2);
       }
     }
     
