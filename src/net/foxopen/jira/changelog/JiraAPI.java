@@ -31,7 +31,7 @@ public class JiraAPI
 {
   private final String username_, password_;
   private final URI jiraServerURI_;
-  private String jql_;
+  private HashSet<String> issueTypeIgnoreSet_;
   private LinkedList<VersionInfo> versionList_;
   private VersionInfoCache cache_;
   
@@ -43,17 +43,10 @@ public class JiraAPI
    * @param password The password used to authenticate with JIRA.
    * @param URL The URL pointing to the JIRA instance.
    */
-  public JiraAPI(String username, String password, String URL, String jql)
+  public JiraAPI(String username, String password, String URL, String ignoreIssueTypeCsv)
   {
     username_ = username;
     password_ = password;
-    
-    if ( jql.equals("") ) {
-      jql_ = "";
-    } else {
-      jql_ = " and (" + jql + ")";
-    }
-    
     URI tempURI = null;
     try {
       tempURI = new URI(URL);
@@ -62,6 +55,8 @@ public class JiraAPI
     } finally {
       jiraServerURI_ = tempURI;
     }
+    issueTypeIgnoreSet_ = new HashSet<String>();
+    issueTypeIgnoreSet_.addAll(Arrays.asList(ignoreIssueTypeCsv.split(",")));
   }
   
   public void setVersionInfoCache(VersionInfoCache cache) 
@@ -130,21 +125,26 @@ public class JiraAPI
             if (vi == null) {
               LinkedList<String> issueList = new LinkedList<String>();
               Logger.log("Obtaining issues related to '" + v.getName() + "' via JIRA API.");
-              SearchResult sr = restClient.getSearchClient().searchJql("project = '" + projectKey + "' and fixVersion = '" + v.getName() + "'" + jql_, pm);
+              SearchResult sr = restClient.getSearchClient().searchJql("project = '" + projectKey + "' and fixVersion = '" + v.getName() + "'", pm);
               
               for (BasicIssue bi : sr.getIssues()) {
                 Logger.log("Obtaining further issue details for issue '" + bi.getKey() + "' via JIRA API.");
                 Issue i = restClient.getIssueClient().getIssue(bi.getKey(), pm);
                 
-                // Add this issue
-                String changelogDescription;
-                try {
-                  changelogDescription = i.getFieldByName("Changelog Description").getValue().toString();
-                } catch (NullPointerException npe) {
-                  // Changelog Description doesn't exist as a field for this issue so just default to the summary. 
-                  changelogDescription = i.getSummary();
+                // Only add this issue if its not in the ignore list.
+                if (!issueTypeIgnoreSet_.contains(i.getIssueType().getName())) {
+                  String changelogDescription;
+                  try {
+                    changelogDescription = i.getFieldByName("Changelog Description").getValue().toString();
+                  } catch (NullPointerException npe) {
+                    // Changelog Description doesn't exist as a field for this issue so just default to the summary. 
+                    changelogDescription = i.getSummary();
+                  }
+                  
+                  issueList.add("[" + i.getKey() + "] " + changelogDescription);
+                } else {
+                  Logger.log("Ignorning issue '" + i.getKey() + "' as it is of issue type '" + i.getIssueType().getName() + "' which is in the ignore list.");
                 }
-                issueList.add("[" + i.getKey() + "] " + changelogDescription);
               }
               
               vi = new VersionInfo(v.getName(), v.getDescription(), versionReleaseDate.toDate(), issueList);
