@@ -130,28 +130,48 @@ public class JiraAPI
             if (vi == null) {
               LinkedList<String> issueList = new LinkedList<String>();
               Logger.log("Obtaining issues related to '" + v.getName() + "' via JIRA API.");
-              SearchResult sr = restClient.getSearchClient().searchJql("project = '" + projectKey + "' and fixVersion = '" + v.getName() + "'" + jql_, pm);
+              SearchResult sr = null;
+              try {
+                sr = restClient.getSearchClient().searchJql("project = '" + projectKey + "' and fixVersion = '" + v.getName() + "'" + jql_, pm);
               
-              for (BasicIssue bi : sr.getIssues()) {
-                Logger.log("Obtaining further issue details for issue '" + bi.getKey() + "' via JIRA API.");
-                Issue i = restClient.getIssueClient().getIssue(bi.getKey(), pm);
+                for (BasicIssue bi : sr.getIssues()) {
+                  Logger.log("Obtaining further issue details for issue '" + bi.getKey() + "' via JIRA API.");
+                  Issue i = restClient.getIssueClient().getIssue(bi.getKey(), pm);
                 
-                // Add this issue
-                String changelogDescription;
-                try {
-                  changelogDescription = i.getFieldByName("Changelog Description").getValue().toString();
-                } catch (NullPointerException npe) {
-                  // Changelog Description doesn't exist as a field for this issue so just default to the summary. 
-                  changelogDescription = i.getSummary();
+                  // Add this issue
+                  String changelogDescription;
+                  try {
+                    changelogDescription = i.getFieldByName("Changelog Description").getValue().toString();
+                  } catch (NullPointerException npe) {
+                    // Changelog Description doesn't exist as a field for this issue so just default to the summary. 
+                    changelogDescription = i.getSummary();
+                  }
+                  issueList.add("[" + i.getKey() + "] " + changelogDescription);
                 }
-                issueList.add("[" + i.getKey() + "] " + changelogDescription);
+              } catch (RestClientException jqlErr) {
+                Logger.log("The additional JQL string supplied was either invalid or returned no results. Ignoring additional JQL.");
+                sr = restClient.getSearchClient().searchJql("project = '" + projectKey + "' and fixVersion = '" + v.getName() + "'" + jql_, pm);
+                for (BasicIssue bi : sr.getIssues()) {
+                  Logger.log("Obtaining further issue details for issue '" + bi.getKey() + "' via JIRA API.");
+                  Issue i = restClient.getIssueClient().getIssue(bi.getKey(), pm);
+                
+                  // Add this issue
+                  String changelogDescription;
+                  try {
+                    changelogDescription = i.getFieldByName("Changelog Description").getValue().toString();
+                  } catch (NullPointerException npe) {
+                    // Changelog Description doesn't exist as a field for this issue so just default to the summary. 
+                    changelogDescription = i.getSummary();
+                  }
+                  issueList.add("[" + i.getKey() + "] " + changelogDescription);
+                }
+              } finally {
+                vi = new VersionInfo(v.getName(), v.getDescription(), versionReleaseDate.toDate(), issueList);
+                if (cache_ != null) {
+                  cache_.cache(vi);
+                }
+                versionList_.add(vi);
               }
-              
-              vi = new VersionInfo(v.getName(), v.getDescription(), versionReleaseDate.toDate(), issueList);
-              if (cache_ != null) {
-                cache_.cache(vi);
-              }
-              versionList_.add(vi);
             } else {
               versionList_.add(vi);
             }
