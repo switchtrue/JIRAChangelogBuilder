@@ -1,12 +1,14 @@
 package net.foxopen.jira.changelog;
 
+/**
+ * Main class for creating a changelog from JIRA.
+ * @author apigram
+ */
 public class Changelog
 {
-  /**
-   * Generate a change log based off a project and version in JIRA.
-   * @param args
-   */
-   
+	/**
+	 * Show usage of the application.
+	 */
   public static void showUsage()
   {
     System.out.println("Usage:");
@@ -23,9 +25,12 @@ public class Changelog
     System.out.println("\t--debug: Print debug/logging information to standard out. This will also force errors to go to the standard out and exit with code 0 rather than 1.");
   }
   
+	/**
+	 * Main function
+	 * @param args Arguments passed in from the command line
+	 */
   public static void main(String[] args) 
   { 
-    
     if ( args.length == 1 &&  args[0].equals("--help")) {
       showUsage();
       System.exit(0);
@@ -52,7 +57,11 @@ public class Changelog
           Logger.enable();
           Logger.log("--debug flag found. Debug logging enabled.");
         } else if (args[currentArgument].equals("--jql")) {
+					// extract the JQL string, replace the *s with spaces, and replace 
+					// brackets with quotation marks (maven strips quotation marks)
           jql = args[++currentArgument];
+					jql = jql.replaceAll("_", " ");
+					jql = jql.replaceAll("(\\[|\\])", "'");
           Logger.log("--jql flag found. Appending JQL: " + jql);
         } else if (args[currentArgument].equals("--object-cache-path")) {
           objectCachePath = args[++currentArgument];

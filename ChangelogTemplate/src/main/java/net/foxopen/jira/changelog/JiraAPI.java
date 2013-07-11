@@ -2,10 +2,8 @@ package net.foxopen.jira.changelog;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.LinkedList;
 
 import org.joda.time.DateTime;
@@ -18,14 +16,13 @@ import com.atlassian.jira.rest.client.domain.Issue;
 import com.atlassian.jira.rest.client.domain.Project;
 import com.atlassian.jira.rest.client.domain.SearchResult;
 import com.atlassian.jira.rest.client.domain.Version;
-import com.atlassian.jira.rest.client.domain.input.VersionInputBuilder;
 import com.atlassian.jira.rest.client.internal.jersey.JerseyJiraRestClientFactory;
 
 /**
- * @author leonmi
- *
  * JiraAPI acts as a single point to communicate with JIRA and extract the version information
  * for use with the ChangelogBuilder. 
+ * @author leonmi
+ *
  */
 public class JiraAPI
 {
@@ -64,6 +61,10 @@ public class JiraAPI
     }
   }
   
+	/**
+	 * Sets the version info cache
+	 * @param cache The version info cache.
+	 */
   public void setVersionInfoCache(VersionInfoCache cache) 
   {
     cache_ = cache;
@@ -128,7 +129,7 @@ public class JiraAPI
               vi = cache_.getCached(v.getName());
             }
             if (vi == null) {
-              LinkedList<String> issueList = new LinkedList<String>();
+              LinkedList<Change> issueList = new LinkedList<Change>();
               Logger.log("Obtaining issues related to '" + v.getName() + "' via JIRA API.");
               SearchResult sr = null;
               try {
@@ -140,13 +141,15 @@ public class JiraAPI
                 
                   // Add this issue
                   String changelogDescription;
+									String type = null;
                   try {
                     changelogDescription = i.getFieldByName("Changelog Description").getValue().toString();
                   } catch (NullPointerException npe) {
                     // Changelog Description doesn't exist as a field for this issue so just default to the summary. 
                     changelogDescription = i.getSummary();
                   }
-                  issueList.add("[" + i.getKey() + "] " + changelogDescription);
+									type = i.getIssueType().getName();
+                  issueList.add(new Change(i.getKey(), changelogDescription, type));
                 }
               } catch (RestClientException jqlErr) {
                 Logger.log("The additional JQL string supplied was either invalid or returned no results. Ignoring additional JQL.");
@@ -157,24 +160,23 @@ public class JiraAPI
                 
                   // Add this issue
                   String changelogDescription;
+									String type = null;
                   try {
                     changelogDescription = i.getFieldByName("Changelog Description").getValue().toString();
                   } catch (NullPointerException npe) {
                     // Changelog Description doesn't exist as a field for this issue so just default to the summary. 
                     changelogDescription = i.getSummary();
                   }
-                  issueList.add("[" + i.getKey() + "] " + changelogDescription);
+									type = i.getIssueType().getName();
+                  issueList.add(new Change(i.getKey(), changelogDescription, type));
                 }
-              } finally {
-                vi = new VersionInfo(v.getName(), v.getDescription(), versionReleaseDate.toDate(), issueList);
-                if (cache_ != null) {
-                  cache_.cache(vi);
-                }
-                versionList_.add(vi);
               }
-            } else {
-              versionList_.add(vi);
+              vi = new VersionInfo(v.getName(), v.getDescription(), versionReleaseDate.toDate(), issueList);
+              if (cache_ != null) {
+                cache_.cache(vi);
+              }
             }
+            versionList_.add(vi);
           }
         }
       }
@@ -200,6 +202,7 @@ public class JiraAPI
   }
   
   /**
+	 * Gets the list of JIRA versions to be included in the changelog, as well as their issues.
    * @return LinkedList of VersionInfo instances giving details about each JIRA version
    * to be included in the change log and their issues. Ordered descending by release date.
    */
@@ -211,9 +214,9 @@ public class JiraAPI
 }
 
 /**
+ * Simple comparator that can be used to order by Date objects descending.
  * @author leonmi
  *
- * Simple comparator that can be used to order by Date objects descending.
  */
 class DateComparator implements Comparator<VersionInfo>
 {

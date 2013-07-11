@@ -6,9 +6,7 @@ package net.foxopen.jira.changelog;
 import java.util.HashMap;
 import java.util.List;
 import java.io.Writer;
-import java.io.IOException;
-import com.github.mustachejava.DefaultMustacheFactory;
-import com.github.mustachejava.Mustache;
+import com.github.mustachejava.*;
 
 /**
  * Incorporates the base logic for Mustache templates for changelogs saved as 
@@ -16,33 +14,28 @@ import com.github.mustachejava.Mustache;
  * @author apigram
  */
 public class ChangelogTemplate {
-  public enum TemplateSelector {
-    FILE,
-    MODULE
-  }
+  static HashMap<String, Object> scopes = new HashMap<String, Object>();
     
-  public class Issue {
-    public String name; // JIRA id
-		public String description; // changelog description field
-  }
-    
-  HashMap<String, Object> scopes;
-    
-  public void createChangelog(boolean isFile, List<Issue> issues, String version, Writer output) throws IOException {
+  /**
+	 * Generate and output a changelog based off a template file
+	 * @param isFile If the changelog is for a file, set this parameter to true. Otherwise, set this parameter to false.
+	 * @param issues A collection of JIRA issues with an identifier and changelog description
+	 * @param version The build version
+	 * @param output The output stream
+	 */
+	public static void createChangelog(boolean isFile, List<VersionInfo> versions, Writer output) {
 		// assemble the JSON hash map
-    scopes.put("version", version);
-    for (Issue issue : issues) {
-      scopes.put("issue", issue);
-    }
+    scopes.put("versions", versions);
 		
-		DefaultMustacheFactory mf = new DefaultMustacheFactory();
-		Mustache template = null;
+		// Compile the required template and generate some output. This output will 
+		// either be piped to a file or copied into a FOX module.
+		MustacheFactory mf = new DefaultMustacheFactory();
+		Mustache template;
 		if (isFile) {
 			template = mf.compile("file.mustache");
 		} else {
 			template = mf.compile("module.mustache");
 		}
-		
-		template.execute(output, mf).flush();
+		template.execute(output, scopes);
 	}
 }

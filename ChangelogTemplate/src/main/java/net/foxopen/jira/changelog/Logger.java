@@ -4,18 +4,21 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * @author leonmi
- *
  * Simple logger that allows logging to be enabled or disabled. When enabled errors
  * will be logged to standard out rather than error out.
+ * @author leonmi
+ *
  */
 public class Logger
 {
+	/**
+	 * Indicates if debug logging is enabled.
+	 */
   public static boolean loggingEnabled = false;
   
   
   /**
-   * Logs <param>message</param> to to standard out if logging is enabled.
+   * Logs <param>message</param> to standard out if logging is enabled.
    * 
    * @param message the String to log to standard out.
    */
