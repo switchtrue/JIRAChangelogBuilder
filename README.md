@@ -28,3 +28,4 @@ Where the arguments are used as follows:
     * '--jql "some arbitrary JQL": Append the given JQL to the issue filter. eg status = "Ready for Build"'
     * `--object-cache-path /some/path`: The path on disk to the cache, if you do not use this, no cache will be used. Using a cache is highly recommended.
     * `--debug`: Print debug/logging information to standard out. This will also force errors to go to the standard out and exit with code 0 rather than 1.
+    * `--changelog-file-name /some/path/file.ext`: The path on disk to the file you wish to output the file changelog to. If you do not use this, the file changelog will be written to changelog.txt in the working directory by default.
