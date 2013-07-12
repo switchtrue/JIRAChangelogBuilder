@@ -18,11 +18,12 @@ import java.util.List;
 public class VersionInfo implements Serializable
 {
   private static final long serialVersionUID = 4317403361667148998L;
+	private final String LS = System.getProperty("line.separator");
  
-  private String name_;
-  private String description_;
-  private Date releaseDate_;
-	private String versionText;
+  private String name;
+  private String description;
+  private Date releaseDate;
+	private String dateText;
   private LinkedList<Change> issueList;
 	private List<Type> typeList; // stores the issues by type
   
@@ -37,18 +38,14 @@ public class VersionInfo implements Serializable
    */
   public VersionInfo(String name, String description, Date releaseDate, LinkedList<Change> issueList)
   {
-    name_ = name;
-    description_ = description;
-    releaseDate_ = releaseDate;
-		this.issueList = new LinkedList<Change>();
+    this.name = name;
+    this.description = description;
+    this.releaseDate = releaseDate;
     this.issueList = issueList;
 		
 		SimpleDateFormat sdf = new SimpleDateFormat();
 		sdf.applyPattern("dd-MM-yyyy");
-		versionText = sdf.format(releaseDate_) + ' ' +  name_;
-		if (description_ != null) {
-			versionText = ' ' + description_;
-		}
+		dateText = sdf.format(releaseDate);
     Collections.sort(this.issueList, new ChangeComparator());
 		
 		// initialise the hashmap and create the sub-lists. 
@@ -56,14 +53,14 @@ public class VersionInfo implements Serializable
 		// templating at all.
 		typeList = new LinkedList<Type>();
 		
-		typeList.add(new Type("Bug"));
-		typeList.add(new Type("Improvement"));
-		typeList.add(new Type("Change Request"));
-		typeList.add(new Type("Task"));
-		typeList.add(new Type("Support Ticket"));
-		typeList.add(new Type("Data Issue"));
-		typeList.add(new Type("Epic"));
-		typeList.add(new Type("New Feature"));
+		typeList.add(new Type("Bugs"));
+		typeList.add(new Type("Improvements"));
+		typeList.add(new Type("Change Requests"));
+		typeList.add(new Type("Tasks"));
+		typeList.add(new Type("Support Tickets"));
+		typeList.add(new Type("Data Issues"));
+		typeList.add(new Type("Epics"));
+		typeList.add(new Type("New Features"));
 		
 		for (Change c : this.issueList) {
 			if (c.getType().equals("Bug")) {
@@ -102,14 +99,6 @@ public class VersionInfo implements Serializable
   }
 	
 	/**
-	 * Gets the version display text
-	 * @return A string in the following format: "{date} {number} {description}"
-	 */
-	String getVersionText() {
-		return versionText;
-	}
-	
-	/**
 	 * Gets the list of types used for the module changelog. Used implicitly by mustache
 	 * @return The list of types
 	 */
@@ -123,7 +112,7 @@ public class VersionInfo implements Serializable
    */
   public String getName()
   {
-    return name_;
+    return name;
   }
   
   /**
@@ -132,7 +121,12 @@ public class VersionInfo implements Serializable
    */
   public String getDescription()
   {
-    return description_;
+		// if no description, send a blank string. Otherwise, send the description with a leading line break
+		if (description == null) {
+			return "";
+		} else {
+			return LS + description;
+		}
   }
   
   /**
@@ -141,14 +135,23 @@ public class VersionInfo implements Serializable
    */
   public Date getReleaseDate()
   {
-    return releaseDate_;
+    return releaseDate;
   }
+	
+	/**
+	 * Gets the release date as a formatted string
+	 * @return The release date formatted as dd-MM-yyyy
+	 */
+	public String getDateText()
+	{
+		return dateText;
+	}
   
   /**
 	 * Gets the list of issues for the current version.
    * @return the list of issues fixed in this JIRA version.
    */
-  public List<Change> getIssueList()
+  List<Change> getIssueList()
   {
     return issueList;
   }

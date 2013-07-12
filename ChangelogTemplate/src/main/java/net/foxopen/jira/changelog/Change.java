@@ -1,8 +1,6 @@
 package net.foxopen.jira.changelog;
 
-import java.io.Serializable;
 import java.util.Comparator;
-import java.util.LinkedList;
 
 /**
  * Represents a JIRA issue for display in the changelog.
@@ -71,15 +69,5 @@ class ChangeComparator implements Comparator<Change> {
 	 */
 	public int compare(Change c1, Change c2) {
 		return c1.getName().compareTo(c2.getName());
-	}
-}
-
-class Type {
-	String name;
-	LinkedList<Change> issues;
-	
-	public Type(String name) {
-		this.name = name;
-		issues = new LinkedList<Change>();
 	}
 }

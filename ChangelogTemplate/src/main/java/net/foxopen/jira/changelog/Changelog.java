@@ -50,6 +50,7 @@ public class Changelog
     
     // Handle optional flags
     String jql = "";
+		String filename = null;
     String objectCachePath = null;
     for (; currentArgument < args.length; currentArgument++) {
       try {
@@ -66,7 +67,10 @@ public class Changelog
         } else if (args[currentArgument].equals("--object-cache-path")) {
           objectCachePath = args[++currentArgument];
           Logger.log("--object-cache-path flag found. Using " + objectCachePath + " as the object cache.");
-        } else {
+        } else if (args[currentArgument].equals("--changelog-file-name")) {
+					filename = args[++currentArgument];
+					Logger.log("--changelog-file-name found. Using " + filename + " as the changelog file.");
+				} else {
           Logger.err("Unknown argument: " + args[currentArgument]);
           System.exit(2);
         }
@@ -93,8 +97,13 @@ public class Changelog
     jiraApi.fetchVersionDetails(jiraProjectKey, versionName);
     
     ChangelogBuilder clWriter = new ChangelogBuilder();
-    Logger.log("Building changelog.");
-    clWriter.build(jiraApi.getVersionInfoList());
+    Logger.log("Building changelog file.");
+		
+		if (filename == null) {
+			// default filename to changelog.txt
+			filename = "changelog.txt";
+		}
+    clWriter.build(jiraApi.getVersionInfoList(), filename);
     Logger.log("Writing changelog to standard out.");
     clWriter.print();
     

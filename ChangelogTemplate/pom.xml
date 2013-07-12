@@ -28,11 +28,6 @@
       <classifier>jar-with-dependencies</classifier>
     </dependency>
     <dependency>
-      <groupId>com.atlassian.jira.rest.client</groupId>
-      <artifactId>jira</artifactId>
-      <version>1.0</version>
-    </dependency>
-    <dependency>
       <groupId>joda-time</groupId>
       <artifactId>joda-time</artifactId>
       <version>2.2</version>
@@ -72,6 +67,11 @@
       <groupId>com.sun.jersey</groupId>
       <artifactId>jersey-json</artifactId>
       <version>1.17.1</version>
+    </dependency>
+    <dependency>
+      <groupId>com.atlassian.jira.rest.client</groupId>
+      <artifactId>jira</artifactId>
+      <version>1.0</version>
     </dependency>
   </dependencies>
 </project>
