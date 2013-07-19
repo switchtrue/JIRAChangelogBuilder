@@ -23,7 +23,7 @@ public class ChangelogTemplate {
 	 * @param version The build version
 	 * @param output The output stream
 	 */
-	public static void createChangelog(boolean isFile, List<VersionInfo> versions, Writer output) {
+	public static void createChangelog(boolean isFile, List<VersionInfo> versions, Writer output, String templateFile) {
 		// assemble the JSON hash map
     scopes.put("versions", versions);
 		
@@ -32,9 +32,9 @@ public class ChangelogTemplate {
 		MustacheFactory mf = new DefaultMustacheFactory();
 		Mustache template;
 		if (isFile) {
-			template = mf.compile("file.mustache");
+			template = mf.compile(templateFile);
 		} else {
-			template = mf.compile("module.mustache");
+			template = mf.compile(templateFile);
 		}
 		template.execute(output, scopes);
 	}

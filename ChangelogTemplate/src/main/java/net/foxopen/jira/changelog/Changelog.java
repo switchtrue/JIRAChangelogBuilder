@@ -35,7 +35,7 @@ public class Changelog
       showUsage();
       System.exit(0);
     }
-    if ( args.length < 5 ) {
+    if ( args.length < 6 ) {
       System.out.println("Not enough arguments given.");
       showUsage();
       System.exit(1);
@@ -47,6 +47,8 @@ public class Changelog
     final String jiraPassword    = args[currentArgument++];
     final String jiraProjectKey  = args[currentArgument++];
     final String versionName     = args[currentArgument++];
+		final String fileTemplate		 = args[currentArgument++];
+		String moduleTemplate				 = fileTemplate; // default to file changelog template
     
     // Handle optional flags
     String jql = "";
@@ -70,6 +72,9 @@ public class Changelog
         } else if (args[currentArgument].equals("--changelog-file-name")) {
 					filename = args[++currentArgument];
 					Logger.log("--changelog-file-name found. Using " + filename + " as the changelog file.");
+				} else if (args[currentArgument].equals("--module-template")) {
+					moduleTemplate = args[++currentArgument];
+					Logger.log("--module-template found. Using " + moduleTemplate + " as the module template.");
 				} else {
           Logger.err("Unknown argument: " + args[currentArgument]);
           System.exit(2);
@@ -86,7 +91,8 @@ public class Changelog
         "\n  JIRA Project Key: " + jiraProjectKey + 
         "\n  JIRA URL: " + jiraURL + 
         "\n  JIRA username: " + jiraUsername + 
-        "\n  JIRA password: " + jiraPassword.substring(0, 1) + "*****" + jiraPassword.substring(jiraPassword.length() - 1)
+        "\n  JIRA password: " + jiraPassword.substring(0, 1) + "*****" + jiraPassword.substring(jiraPassword.length() - 1) +
+				"\n  Template file: " + fileTemplate
         );
     
     JiraAPI jiraApi = new JiraAPI(jiraUsername, jiraPassword, jiraURL, jql);
@@ -103,7 +109,7 @@ public class Changelog
 			// default filename to changelog.txt
 			filename = "changelog.txt";
 		}
-    clWriter.build(jiraApi.getVersionInfoList(), filename);
+    clWriter.build(jiraApi.getVersionInfoList(), filename, fileTemplate, moduleTemplate);
     Logger.log("Writing changelog to standard out.");
     clWriter.print();
     

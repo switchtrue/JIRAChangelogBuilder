@@ -14,6 +14,10 @@ public class Type {
 	String name;
 	LinkedList<Change> issues;
 	
+	/**
+	 * Default constructor
+	 * @param name The name of the type
+	 */
 	public Type(String name) {
 		this.name = name;
 		issues = new LinkedList<Change>();

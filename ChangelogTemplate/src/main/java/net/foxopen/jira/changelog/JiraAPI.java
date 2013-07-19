@@ -159,7 +159,7 @@ public class JiraAPI
                   Issue i = restClient.getIssueClient().getIssue(bi.getKey(), pm);
                 
                   // Add this issue
-                  String changelogDescription;
+                  String changelogDescription = null;
 									String type = null;
                   try {
                     changelogDescription = i.getFieldByName("Changelog Description").getValue().toString();
@@ -220,6 +220,12 @@ public class JiraAPI
  */
 class DateComparator implements Comparator<VersionInfo>
 {
+	/**
+	 * Compare the value of two dates. Used to sort issues and versions by date
+	 * @param a A date to compare with
+	 * @param b Another date to compare
+	 * @return -1 if <param>a</param> &gt; <param>b</param>, 1 if <param>a</param> &lt; <param>b</param>, otherwise 0
+	 */
   public int compare(VersionInfo a, VersionInfo b)
   {
     if (a.getReleaseDate().after(b.getReleaseDate())) {

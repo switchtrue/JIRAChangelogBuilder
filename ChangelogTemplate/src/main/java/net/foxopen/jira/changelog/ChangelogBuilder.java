@@ -21,7 +21,7 @@ public class ChangelogBuilder
    * @param versionInfoList The list of JIRA versions to build the changelog for as VersionInfo objects.
    * The change log will be generated in the order that the VersionInfo objects are in the list.
    */
-  public void build(List<VersionInfo> versionInfoList, String filename)
+  public void build(List<VersionInfo> versionInfoList, String filename, String fileTemplate, String moduleTemplate)
   {
     changelogStringWriter_ = new StringWriter();
 		
@@ -29,7 +29,7 @@ public class ChangelogBuilder
 		FileWriter writer = null;
 		try {
 			writer = new FileWriter(new File(filename));
-			ChangelogTemplate.createChangelog(true, versionInfoList, writer);
+			ChangelogTemplate.createChangelog(true, versionInfoList, writer, fileTemplate);
 			writer.flush();
 			writer.close();
 		}
@@ -37,7 +37,7 @@ public class ChangelogBuilder
 			// catch and ignore because we don't care if the file doesn't exist or cannot be written
 		}
 		Logger.log("Building module changelog.");
-		ChangelogTemplate.createChangelog(false, versionInfoList, changelogStringWriter_);
+		ChangelogTemplate.createChangelog(false, versionInfoList, changelogStringWriter_, moduleTemplate);
 		changelogStringWriter_.flush();
   }
   

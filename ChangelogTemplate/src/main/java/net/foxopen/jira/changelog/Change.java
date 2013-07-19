@@ -6,7 +6,7 @@ import java.util.Comparator;
  * Represents a JIRA issue for display in the changelog.
  * @author apigram
  */
-class Change {
+public class Change {
   private String name;
 	private String description;
 	private String type;
