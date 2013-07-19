@@ -7,7 +7,7 @@ Downloads are available at http://mleonard87.github.io/JIRAChangelogBuilder/rele
 Compilation
 -----------
 
-Run 'mvn' from the base directory to generate build/jira-changelog-builder.jar
+Run 'mvn install' from the base directory to generate build/jira-changelog-builder.jar. This will also automatically execute the bundled test case.
 
 Usage
 -----
