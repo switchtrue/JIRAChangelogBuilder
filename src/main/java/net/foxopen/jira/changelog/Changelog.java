@@ -12,17 +12,20 @@ public class Changelog
   public static void showUsage()
   {
     System.out.println("Usage:");
-    System.out.println("java -jar jira-changelog-builder.jar <JIRA_URL> <JIRA_username> <JIRA_password> <JIRA_project_name> <version> [<flags>]");
+    System.out.println("java -jar jira-changelog-builder.jar <JIRA_URL> <JIRA_username> <JIRA_password> <JIRA_project_name> <version> <file_template> [<flags>]");
     System.out.println("<JIRA_URL>: The URL of the JIRA instance (e.g. https://somecompany.atlassian.net).");
     System.out.println("<JIRA_username>: The username used to log into JIRA.");
     System.out.println("<JIRA_password>: The password used to log into JIRA.");
     System.out.println("<JIRA_project_name>: The name of the project in JIRA.");
     System.out.println("<version>: The name of the version this changelog is for.");
+		System.out.println("<file_template>: The path to a file that will be used as the changelog template.");
     System.out.println("<flags> (optional): One or more of the following flags:");
     // TODO: If this JQL causes no issues to be returned, it causes a hard error. Handle this more nicely.
     System.out.println("\t--jql 'some arbitrary JQL': Append the given JQL to the issue filter. eg 'status = \"Ready for Build\"'");
     System.out.println("\t--object-cache-path /some/path: The path on disk to the cache, if you do not use this, no cache will be used. Using a cache is highly recommended.");
     System.out.println("\t--debug: Print debug/logging information to standard out. This will also force errors to go to the standard out and exit with code 0 rather than 1.");
+		System.out.println("\t--changelog-file-name /some/path/file.ext: The path on disk to the file you wish to output the file changelog to. If you do not use this, the file changelog will be written to changelog.txt in the working directory by default.");
+    System.out.println("\t--module-template /some/path/file.ext: The path to a file to use as the template for the 'about' FOX module. This defaults to the same template as the changelog file.");
   }
   
 	/**

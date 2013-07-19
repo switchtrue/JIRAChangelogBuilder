@@ -24,7 +24,7 @@ public class VersionInfo implements Serializable
   private String description;
   private Date releaseDate;
 	private String dateText;
-  private LinkedList<Change> issueList;
+  private LinkedList<Change> issues;
 	private List<Type> typeList; // stores the issues by type
   
   /**
@@ -41,12 +41,12 @@ public class VersionInfo implements Serializable
     this.name = name;
     this.description = description;
     this.releaseDate = releaseDate;
-    this.issueList = issueList;
+    this.issues = issueList;
 		
 		SimpleDateFormat sdf = new SimpleDateFormat();
 		sdf.applyPattern("dd-MM-yyyy");
 		dateText = sdf.format(releaseDate);
-    Collections.sort(this.issueList, new ChangeComparator());
+    Collections.sort(this.issues, new ChangeComparator());
 		
 		// initialise the hashmap and create the sub-lists. 
 		// The key is purely for lookup when inserting issues. It is not used for
@@ -62,7 +62,7 @@ public class VersionInfo implements Serializable
 		typeList.add(new Type("Epics"));
 		typeList.add(new Type("New Features"));
 		
-		for (Change c : this.issueList) {
+		for (Change c : this.issues) {
 			if (c.getType().equals("Bug")) {
 				typeList.get(0).issues.add(c);
 			}
@@ -151,9 +151,9 @@ public class VersionInfo implements Serializable
 	 * Gets the list of issues for the current version.
    * @return the list of issues fixed in this JIRA version.
    */
-  List<Change> getIssueList()
+  List<Change> getIssues()
   {
-    return issueList;
+    return issues;
   }
   
 	/**
@@ -162,6 +162,6 @@ public class VersionInfo implements Serializable
 	 */
   public boolean hasIssues()
   {
-    return !issueList.isEmpty();
+    return !issues.isEmpty();
   }
 }
