@@ -13,7 +13,6 @@ import java.io.StringWriter;
  */
 public class ChangelogBuilder
 {
-  private StringWriter changelogStringWriter_;
   
   /**
    * Iterates over a list of JIRA project versions and creates a changelog.
@@ -21,39 +20,22 @@ public class ChangelogBuilder
    * @param versionInfoList The list of JIRA versions to build the changelog for as VersionInfo objects.
    * The change log will be generated in the order that the VersionInfo objects are in the list.
    */
-  public void build(List<VersionInfo> versionInfoList, String filename, String fileTemplate, String moduleTemplate)
+  public void build(List<VersionInfo> versionInfoList, String filename, String[] templates)
   {
-    changelogStringWriter_ = new StringWriter();
+		FileWriter writer = null;
+		int fileIndex = 1;
 		
 		// build the changelog for the file using the file template.
-		FileWriter writer = null;
 		try {
-			writer = new FileWriter(new File(filename));
-			ChangelogTemplate.createChangelog(true, versionInfoList, writer, fileTemplate);
-			writer.flush();
-			writer.close();
+			for (String t : templates) {
+				writer = new FileWriter(filename + (fileIndex++) + ".txt");
+				ChangelogTemplate.createChangelog(true, versionInfoList, writer, t);
+				writer.flush();
+				writer.close();
+			}
 		}
 		catch (IOException e) {
 			// catch and ignore because we don't care if the file doesn't exist or cannot be written
 		}
-		Logger.log("Building module changelog.");
-		ChangelogTemplate.createChangelog(false, versionInfoList, changelogStringWriter_, moduleTemplate);
-		changelogStringWriter_.flush();
   }
-  
-  /**
-   * Prints the module-level changelog to the screen.
-   */
-  public void print()
-  {
-    System.out.println(changelogStringWriter_.toString().trim());
-  }
-	
-	/**
-	 * Gets the module-level changelog. Useful for unit testing
-	 * @return 
-	 */
-	String getModuleChangelog() {
-		return changelogStringWriter_.toString().trim();
-	}
 }

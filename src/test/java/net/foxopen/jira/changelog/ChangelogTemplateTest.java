@@ -88,15 +88,17 @@ public class ChangelogTemplateTest extends TestCase {
 		try {
 			JiraAPI jira = new JiraAPI("jenkins", "j3nk1ns!", "https://fivium.atlassian.net", "");
 			jira.fetchVersionDetails("TESTPROJ", "2.0.1");
+			String[] files = new String[2];
+			files[0] = "file.mustache";
+			files[1] = "module.mustache";
 			ChangelogBuilder clWriter = new ChangelogBuilder();
-			clWriter.build(jira.getVersionInfoList(), "changelog.txt", "file.mustache", "module.mustache");
+			clWriter.build(jira.getVersionInfoList(), "changelog.txt", files);
 			
 			// attempt to open the generated changelog file. If an IOException is thrown, then the file does not exist.
-			FileReader reader = new FileReader(new File("changelog.txt"));
+			FileReader reader = new FileReader("changelog1");
 			reader.close();
-			
-			assertNotNull("No module changelog text.", clWriter.getModuleChangelog()); // change to an assertEquals if its possible to create a comparison file
-			clWriter.print();
+			reader = new FileReader("changelog2");
+			reader.close();
 		} catch (IOException e) {
 			fail("File does not exist!");
 			System.out.println(e.getMessage());
