@@ -28,10 +28,13 @@ public class ChangelogBuilder
 		// build the changelog for the file using the file template.
 		try {
 			for (String t : templates) {
-				writer = new FileWriter(filename + (fileIndex++) + ".txt");
-				ChangelogTemplate.createChangelog(true, versionInfoList, writer, t);
-				writer.flush();
-				writer.close();
+				if (t != null) {
+					Logger.log("Writing " + filename + (fileIndex) + ".txt");
+					writer = new FileWriter(filename + (fileIndex++) + ".txt");
+					ChangelogTemplate.createChangelog(true, versionInfoList, writer, t);
+					writer.flush();
+					writer.close();
+				}
 			}
 		}
 		catch (IOException e) {
