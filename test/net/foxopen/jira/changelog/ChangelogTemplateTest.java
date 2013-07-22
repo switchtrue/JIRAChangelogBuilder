@@ -101,10 +101,10 @@ public class ChangelogTemplateTest extends TestCase {
 			reader.close();
 		} catch (IOException e) {
 			fail("File does not exist!");
-			System.out.println(e.getMessage());
+			System.err.println(e.getMessage());
 		} catch (Exception e) {
 			fail("Exception raised.");
-			System.out.println(e.getMessage());
+			System.err.println(e.getMessage());
 		}
 	}
 }
