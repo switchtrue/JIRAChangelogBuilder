@@ -74,4 +74,9 @@
       <version>1.0</version>
     </dependency>
   </dependencies>
+	
+	<build>
+		<sourceDirectory>src</sourceDirectory>
+		<testSourceDirectory>test</testSourceDirectory>
+	</build>
 </project>
