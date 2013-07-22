@@ -1,5 +1,7 @@
 package net.foxopen.jira.changelog;
 
+import java.io.File;
+
 /**
  * Main class for creating a changelog from JIRA.
  * @author apigram
@@ -94,6 +96,14 @@ public class Changelog
         );
 		
 		String[] templates = templateList.split(",");
+		File f = null;
+		for (int i = 0; i < templates.length; i++) {
+			f = new File(templates[i]);
+			if (!f.exists()) {
+				Logger.log("Template file " + f.getName() + " does not exist. Ignoring template.");
+				templates[i] = null;
+			}
+		}
     
     JiraAPI jiraApi = new JiraAPI(jiraUsername, jiraPassword, jiraURL, jql);
     if (objectCachePath != null) {
