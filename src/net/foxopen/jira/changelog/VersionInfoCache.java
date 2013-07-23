@@ -9,10 +9,9 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 /**
- * @author leonmi
- *
  * A disk-based cache for VersionInfo instances. VersionInfo objects are serialized to disk
  * with a file name of projectkey_versionname.ser. These can be deserialized and used upon request. 
+ * @author leonmi
  * 
  */
 public class VersionInfoCache
