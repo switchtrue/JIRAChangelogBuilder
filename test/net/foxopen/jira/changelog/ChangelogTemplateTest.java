@@ -92,12 +92,12 @@ public class ChangelogTemplateTest extends TestCase {
 			files[0] = "file.mustache";
 			files[1] = "module.mustache";
 			ChangelogBuilder clWriter = new ChangelogBuilder();
-			clWriter.build(jira.getVersionInfoList(), "changelog.txt", files);
+			clWriter.build(jira.getVersionInfoList(), "changelog", files);
 			
 			// attempt to open the generated changelog file. If an IOException is thrown, then the file does not exist.
-			FileReader reader = new FileReader("changelog1");
+			FileReader reader = new FileReader("changelog1.txt");
 			reader.close();
-			reader = new FileReader("changelog2");
+			reader = new FileReader("changelog2.txt");
 			reader.close();
 		} catch (IOException e) {
 			fail("File does not exist!");
