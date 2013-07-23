@@ -3,8 +3,8 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>net.foxopen.jira.changelog</groupId>
-  <artifactId>JIRAChangelogBuilder</artifactId>
-  <version>1.0</version>
+  <artifactId>jira-changelog-builder</artifactId>
+  <version>1.04.00</version>
   <packaging>jar</packaging>
 
   <name>JIRAChangelogBuilder</name>
