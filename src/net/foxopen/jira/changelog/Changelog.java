@@ -27,6 +27,7 @@ public class Changelog
     System.out.println("\t--object-cache-path /some/path: The path on disk to the cache, if you do not use this, no cache will be used. Using a cache is highly recommended.");
     System.out.println("\t--debug: Print debug/logging information to standard out. This will also force errors to go to the standard out and exit with code 0 rather than 1.");
 		System.out.println("\t--changelog-file-name /some/path/file: The path on disk to the file you wish to output the file changelog to. If you do not use this, the file changelog will be written to changelog#.txt in the working directory by default (where # is the changelog file number).");
+		System.out.println("\t--changelog-description-field 'field_name': The name of the field in JIRA you wish to use as the changelog description field. If you do not use this, it will default to the summary field.");
   }
   
 	/**
@@ -57,6 +58,7 @@ public class Changelog
     String jql = "";
 		String filename = null;
     String objectCachePath = null;
+		String descriptionField = null;
     for (; currentArgument < args.length; currentArgument++) {
       try {
         if (args[currentArgument].equals("--debug")) {
@@ -75,6 +77,9 @@ public class Changelog
         } else if (args[currentArgument].equals("--changelog-file-name")) {
 					filename = args[++currentArgument];
 					Logger.log("--changelog-file-name found. Using " + filename + " as the changelog file.");
+				} else if (args[currentArgument].equals("--changelog-description-field")) {
+					descriptionField = args[++currentArgument];
+					Logger.log("--changelog-description-field found. Using " + descriptionField + " as the Changelog Description field.");
 				} else {
           Logger.err("Unknown argument: " + args[currentArgument]);
           System.exit(2);
@@ -105,7 +110,7 @@ public class Changelog
 			}
 		}
     
-    JiraAPI jiraApi = new JiraAPI(jiraUsername, jiraPassword, jiraURL, jql);
+    JiraAPI jiraApi = new JiraAPI(jiraUsername, jiraPassword, jiraURL, jql, descriptionField);
     if (objectCachePath != null) {
       VersionInfoCache cache = new VersionInfoCache(jiraProjectKey, objectCachePath);
       jiraApi.setVersionInfoCache(cache);

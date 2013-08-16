@@ -86,7 +86,7 @@ public class ChangelogTemplateTest extends TestCase {
 	public void testCreateAll() throws Exception {
 		System.out.println("allChangelogs");
 		try {
-			JiraAPI jira = new JiraAPI("jenkins", "j3nk1ns!", "https://fivium.atlassian.net", "");
+			JiraAPI jira = new JiraAPI("jenkins", "j3nk1ns!", "https://fivium.atlassian.net", "", "");
 			jira.fetchVersionDetails("TESTPROJ", "2.0.1");
 			String[] files = new String[2];
 			files[0] = "file.mustache";

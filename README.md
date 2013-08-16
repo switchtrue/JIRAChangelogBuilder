@@ -25,7 +25,8 @@ Where the arguments are used as follows:
   *  `<version>`: The name of the version this changelog is for.
   *  `<template_list>`: A CSV list of paths to template files. Each templated changelog is saved into a new file which can be processed at a later stage.
   *  `<flags>` (optional): One or more of the following flags:
-    * `--jql "some arbitrary JQL"`: Append the given JQL to the issue filter. eg status = "Ready for Build"'
+    * `--jql "some arbitrary JQL"`: Append the given JQL to the issue filter. eg status = "Ready for Build".
     * `--object-cache-path /some/path`: The path on disk to the cache, if you do not use this, no cache will be used. Using a cache is highly recommended.
     * `--debug`: Print debug/logging information to standard out. This will also force errors to go to the standard out and exit with code 0 rather than 1.
     * `--changelog-file-name /some/path/filename`: The path on disk to the file you wish to output the file changelog to. If you do not use this, the file changelog will be written to changelog#.txt in the working directory by default (where # is the changelog file number).
+    * `--changelog-description-field "field_name"`: The name of the field in JIRA you wish to use as the changelog description field. If you do not use this, it will default to the summary field.
