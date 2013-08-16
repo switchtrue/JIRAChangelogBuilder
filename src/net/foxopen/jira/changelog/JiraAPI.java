@@ -40,6 +40,7 @@ public class JiraAPI
    * @param username The username used to authenticate with JIRA.
    * @param password The password used to authenticate with JIRA.
    * @param URL The URL pointing to the JIRA instance.
+	 * @param descriptionField The name of the field in JIRA to use as the changelog description.
    */
   public JiraAPI(String username, String password, String URL, String jql, String descriptionField)
   {
