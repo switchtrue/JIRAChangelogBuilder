@@ -29,6 +29,7 @@ public class JiraAPI
   private final String username_, password_;
   private final URI jiraServerURI_;
   private String jql_;
+	private String descriptionField;
   private LinkedList<VersionInfo> versionList_;
   private VersionInfoCache cache_;
   
@@ -39,8 +40,9 @@ public class JiraAPI
    * @param username The username used to authenticate with JIRA.
    * @param password The password used to authenticate with JIRA.
    * @param URL The URL pointing to the JIRA instance.
+	 * @param descriptionField The name of the field in JIRA to use as the changelog description.
    */
-  public JiraAPI(String username, String password, String URL, String jql)
+  public JiraAPI(String username, String password, String URL, String jql, String descriptionField)
   {
     username_ = username;
     password_ = password;
@@ -50,6 +52,7 @@ public class JiraAPI
     } else {
       jql_ = " and (" + jql + ")";
     }
+		this.descriptionField = descriptionField;
     
     URI tempURI = null;
     try {
@@ -143,7 +146,7 @@ public class JiraAPI
                   String changelogDescription;
 									String type = null;
                   try {
-                    changelogDescription = i.getFieldByName("Changelog Description").getValue().toString();
+                    changelogDescription = i.getFieldByName(descriptionField).getValue().toString();
                   } catch (NullPointerException npe) {
                     // Changelog Description doesn't exist as a field for this issue so just default to the summary. 
                     changelogDescription = i.getSummary();
@@ -162,7 +165,7 @@ public class JiraAPI
                   String changelogDescription = null;
 									String type = null;
                   try {
-                    changelogDescription = i.getFieldByName("Changelog Description").getValue().toString();
+                    changelogDescription = i.getFieldByName(descriptionField).getValue().toString();
                   } catch (NullPointerException npe) {
                     // Changelog Description doesn't exist as a field for this issue so just default to the summary. 
                     changelogDescription = i.getSummary();

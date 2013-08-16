@@ -13,3 +13,10 @@ bin
 .changelogcache/*
 
 build
+changelog.html
+changelog.txt
+changelog1.txt
+changelog2.txt
+nbactions.xml
+target/surefire-reports/TEST-net.foxopen.jira.changelog.ChangelogTemplateTest.xml
+target/surefire-reports/net.foxopen.jira.changelog.ChangelogTemplateTest.txt
