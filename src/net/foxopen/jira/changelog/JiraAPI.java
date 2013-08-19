@@ -233,7 +233,7 @@ class DateComparator implements Comparator<VersionInfo>
     } else if (a.getReleaseDate().before(b.getReleaseDate())) {
       return 1;
     } else {
-      return 0;
+      return -(a.getName().compareTo(b.getName()));
     }
   }
 }
