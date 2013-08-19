@@ -38,6 +38,9 @@ public class ChangelogTemplateTest extends TestCase {
 		versions = new LinkedList<VersionInfo>();
 		VersionInfo version = new VersionInfo("2.0.1", "Bug fix release for 2.0.0", new Date(), issues);
 		versions.add(version);
+		version = new VersionInfo("2.0.2", "Bug fix release for 2.0.0", new Date(), issues);
+		versions.add(version);
+		
 		
 		output = new StringWriter();
 	}
