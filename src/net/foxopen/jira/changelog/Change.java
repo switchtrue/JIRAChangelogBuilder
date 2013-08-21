@@ -8,7 +8,7 @@ import java.util.Comparator;
  * @version 1.03.00
  */
 public class Change {
-  private String name;
+  private String issueKey;
 	private String description;
 	private String type;
 		
@@ -18,8 +18,8 @@ public class Change {
 	 * @param description Issue changelog description.
 	 * @param type Issue type.
 	 */
-	public Change(String name, String description, String type) {
-		this.name = name;
+	public Change(String issueKey, String description, String type) {
+		this.issueKey = issueKey;
 		this.description = description;
 		this.type = new String();
 		this.type = type;
@@ -29,11 +29,11 @@ public class Change {
 	 * Obtain the JIRA identifier of the issue
 	 * @return JIRA issue identifier.
 	 */
-	final String getName()
+	final String getIssueKey()
 	{
 		// this is package level visibility as this function is only used internally
 		// for comparisons and templating, and as such should not be overridden.
-		return name;
+		return issueKey;
 	}
 	
 	/**
@@ -70,6 +70,6 @@ class ChangeComparator implements Comparator<Change> {
 	 * @return 0 if the identifiers are identical, otherwise the value of c1.name - c2.name
 	 */
 	public int compare(Change c1, Change c2) {
-		return c1.getName().compareTo(c2.getName());
+		return c1.getIssueKey().compareTo(c2.getIssueKey());
 	}
 }

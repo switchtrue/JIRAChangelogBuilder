@@ -29,7 +29,7 @@ public class ChangelogTemplate {
 	 * @param templateFile The template file to use when generating the changelog.
 	 * @param ending A value indicating the kind of newlines to be used in the changelog file.
 	 */
-	public static void createChangelog(boolean isFile, List<VersionInfo> versions, Writer output, String templateFile, LineEnding ending) {
+	public static void createChangelog(List<VersionInfo> versions, Writer output, String templateFile, LineEnding ending) {
 		StringWriter out = new StringWriter();
 		String buffer = null; // templated file content. This buffer is used to convert the line endings.
 		MustacheFactory mf = new DefaultMustacheFactory();
@@ -40,11 +40,8 @@ public class ChangelogTemplate {
 
 		// Compile the required template and generate some output. This output will 
 		// either be piped to a file or copied into a FOX module.
-		if (isFile) {
-			template = mf.compile(templateFile);
-		} else {
-			template = mf.compile(templateFile);
-		}
+		MustacheFactory mf = new DefaultMustacheFactory();
+		Mustache template = mf.compile(templateFile);
 		template.execute(out, scopes);
 		
 		// grab the merged string

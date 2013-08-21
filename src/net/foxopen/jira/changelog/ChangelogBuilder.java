@@ -16,23 +16,25 @@ public class ChangelogBuilder
    * Iterates over a list of JIRA project versions and creates a changelog.
    * 
    * @param versionInfoList The list of JIRA versions to build the changelog for as VersionInfo objects.
+	 * @param files A collection of file names to use when writing the changelog files.
+	 * @param templates A collection of template files to use for writing the changelog files.
    * The change log will be generated in the order that the VersionInfo objects are in the list.
 	 * @param filename Output file name.
 	 * @param filename A list of template names.
 	 * @param ending A value indicating the kind of newlines to be used in the changelog file.
    */
-  public void build(List<VersionInfo> versionInfoList, String filename, String[] templates, LineEnding ending)
+  public void build(List<VersionInfo> versionInfoList, String[] files, String[] templates, LineEnding ending)
   {
 		FileWriter writer = null;
-		int fileIndex = 1;
+		int fileIndex = 0;
 		
 		// build the changelog for the file using the file template.
 		try {
 			for (String t : templates) {
 				if (t != null) {
-					Logger.log("Writing " + filename + (fileIndex) + ".txt");
-					writer = new FileWriter(filename + (fileIndex++) + ".txt");
-					ChangelogTemplate.createChangelog(true, versionInfoList, writer, t, ending);
+					Logger.log("Writing " + files[fileIndex]);
+					writer = new FileWriter(files[fileIndex++]);
+					ChangelogTemplate.createChangelog(versionInfoList, writer, t, ending);
 					writer.flush();
 					writer.close();
 				}
