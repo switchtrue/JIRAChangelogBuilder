@@ -1,0 +1,14 @@
+<html>
+  <head>
+  </head>
+  <body>
+    {{#versions}}
+    <h3>{{dateText}} {{name}}{{{description}}}</h3>
+    <ul>
+        {{#issues}}
+        <li>[{{{issueKey}}}]: {{{description}}}</li>
+        {{/issues}}
+    </ul>
+    {{/versions}}
+  </body>
+</html>
