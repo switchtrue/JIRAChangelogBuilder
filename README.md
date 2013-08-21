@@ -29,3 +29,4 @@ Where the arguments are used as follows:
     * `--object-cache-path /some/path`: The path on disk to the cache, if you do not use this, no cache will be used. Using a cache is highly recommended.
     * `--debug`: Print debug/logging information to standard out. This will also force errors to go to the standard out and exit with code 0 rather than 1.
     * `--changelog-file-name /some/path/filename`: The path on disk to the file you wish to output the file changelog to. If you do not use this, the file changelog will be written to changelog#.txt in the working directory by default (where # is the changelog file number).
+    * `--eol-style (NATIVE|CRLF|LF)`: The type of line endings you wish the changelog files to use. Valid values are NATIVE (system line endings), CRLF (Windows line endings) or LF (UNIX line endings). If you do not use this, the changelogs will use the default system line endings (NATIVE).

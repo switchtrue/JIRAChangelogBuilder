@@ -4,7 +4,7 @@ import java.io.File;
 
 /**
  * Main class for creating a changelog from JIRA.
- * @author apigram
+ * @author leonmi
  */
 public class Changelog
 {
@@ -27,7 +27,8 @@ public class Changelog
     System.out.println("\t--object-cache-path /some/path: The path on disk to the cache, if you do not use this, no cache will be used. Using a cache is highly recommended.");
     System.out.println("\t--debug: Print debug/logging information to standard out. This will also force errors to go to the standard out and exit with code 0 rather than 1.");
 		System.out.println("\t--changelog-file-name /some/path/file: The path on disk to the file you wish to output the file changelog to. If you do not use this, the file changelog will be written to changelog#.txt in the working directory by default (where # is the changelog file number).");
-  }
+		System.out.println("\t--eol-style (NATIVE|CRLF|LF): The type of line endings you wish the changelog files to use. Valid values are NATIVE (system line endings), CRLF (Windows line endings) or LF (UNIX line endings). If you do not use this, the changelogs will use the default system line endings.");
+	}
   
 	/**
 	 * Main function
@@ -57,6 +58,7 @@ public class Changelog
     String jql = "";
 		String filename = null;
     String objectCachePath = null;
+		LineEnding ending = LineEnding.NATIVE; // default to native line endings
     for (; currentArgument < args.length; currentArgument++) {
       try {
         if (args[currentArgument].equals("--debug")) {
@@ -75,13 +77,20 @@ public class Changelog
         } else if (args[currentArgument].equals("--changelog-file-name")) {
 					filename = args[++currentArgument];
 					Logger.log("--changelog-file-name found. Using " + filename + " as the changelog file.");
+				} else if (args[currentArgument].equals("--eol-style")) {
+					ending = LineEnding.getEnding(args[++currentArgument]);
+					if (ending == null) {
+						// invalid style, log error and terminate
+						Logger.err("Unknown line ending style flag.");
+						System.exit(4);
+					}
 				} else {
           Logger.err("Unknown argument: " + args[currentArgument]);
           System.exit(2);
         }
       } catch (ArrayIndexOutOfBoundsException e) {
         // Assuming this has come from args[++currentArgument] in the above try block
-        Logger.err("Malformed arguments. '" + args[currentArgument-1] + "' requires a following argument");
+        Logger.err("Malformed arguments. '" + args[currentArgument-1] + "' requires a following argument.");
         System.exit(3);
       }
     }
@@ -119,7 +128,7 @@ public class Changelog
 			// default filename to changelog.txt
 			filename = "changelog";
 		}
-    clWriter.build(jiraApi.getVersionInfoList(), filename, templates);
+    clWriter.build(jiraApi.getVersionInfoList(), filename, templates, ending);
     
     Logger.log("Done - Success!");
     System.exit(0);
