@@ -57,7 +57,7 @@ public class ChangelogTemplateTest extends TestCase {
 	public void testFileChangelog() throws Exception {
 		System.out.println("fileChangelog");
 		try {
-			ChangelogTemplate.createChangelog(versions, output, "examples/file.mustache");
+			ChangelogTemplate.createChangelog(versions, output, "examples/file.mustache", LineEnding.NATIVE);
 		} catch (Exception e) {
 			fail("Exception raised.");
 			e.printStackTrace();
@@ -73,7 +73,7 @@ public class ChangelogTemplateTest extends TestCase {
 	public void testModuleChangelog() throws Exception {
 		System.out.println("moduleChangelog");
 		try {
-			ChangelogTemplate.createChangelog(versions, output, "examples/module.mustache");
+			ChangelogTemplate.createChangelog(versions, output, "examples/module.mustache", LineEnding.NATIVE);
 		} catch (Exception e) {
 			fail("Exception raised.");
 			e.printStackTrace();
@@ -81,38 +81,5 @@ public class ChangelogTemplateTest extends TestCase {
 		
 		assertNotNull("No file output.", output.toString());
 		System.out.println(output.toString());
-	}
-	
-	/**
-	 * Black-box regression test for integrating the new template module with the existing program base.
-	 */
-	public void testCreateAll() throws Exception {
-		System.out.println("allChangelogs");
-		try {
-			JiraAPI jira = new JiraAPI("jenkins", "j3nk1ns!", "https://fivium.atlassian.net", "");
-			jira.fetchVersionDetails("TESTPROJ", "2.0.1");
-			String[] files = new String[2];
-			files[0] = "examples/file.mustache";
-			files[1] = "examples/module.mustache";
-			
-			String[] out = new String[2];
-			out[0] = "changelog.txt";
-			out[1] = "changelog.html";
-			
-			ChangelogBuilder clWriter = new ChangelogBuilder();
-			clWriter.build(jira.getVersionInfoList(), out, files);
-			
-			// attempt to open the generated changelog file. If an IOException is thrown, then the file does not exist.
-			FileReader reader = new FileReader("changelog.txt");
-			reader.close();
-			reader = new FileReader("changelog.html");
-			reader.close();
-		} catch (IOException e) {
-			fail("File does not exist!");
-			System.err.println(e.getMessage());
-		} catch (Exception e) {
-			fail("Exception raised.");
-			System.err.println(e.getMessage());
-		}
 	}
 }

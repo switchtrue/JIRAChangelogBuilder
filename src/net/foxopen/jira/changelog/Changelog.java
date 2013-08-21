@@ -112,7 +112,7 @@ public class Changelog
 				"\n  Template files: " + templateList
         );
 		
-		File f = null;
+		File f;
 		for (int i = 0; i < templates.length; i++) {
 			f = new File(templates[i]);
 			if (!f.exists()) {
@@ -136,10 +136,11 @@ public class Changelog
 			files = new String[templates.length];
 			for (int i = 0; i < files.length; i++) {
 				files[i] = "changelog.txt";
+			}
 		}
-    clWriter.build(jiraApi.getVersionInfoList(), filename, templates, ending);
+    clWriter.build(jiraApi.getVersionInfoList(), files, templates, ending);
     
     Logger.log("Done - Success!");
     System.exit(0);
-  }
+	}
 }

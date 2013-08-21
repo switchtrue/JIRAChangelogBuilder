@@ -33,15 +33,14 @@ public class ChangelogTemplate {
 		StringWriter out = new StringWriter();
 		String buffer = null; // templated file content. This buffer is used to convert the line endings.
 		MustacheFactory mf = new DefaultMustacheFactory();
-		Mustache template;
+		Mustache template = mf.compile(templateFile);
 		
 		// assemble the JSON hash map
     scopes.put("versions", versions);
 
 		// Compile the required template and generate some output. This output will 
 		// either be piped to a file or copied into a FOX module.
-		MustacheFactory mf = new DefaultMustacheFactory();
-		Mustache template = mf.compile(templateFile);
+		
 		template.execute(out, scopes);
 		
 		// grab the merged string
