@@ -12,6 +12,7 @@ bin
 
 .changelogcache/*
 .nb*
+nb*
 
 build
 target
