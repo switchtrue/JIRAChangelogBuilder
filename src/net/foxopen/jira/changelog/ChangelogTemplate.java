@@ -23,19 +23,14 @@ public class ChangelogTemplate {
 	 * @param version The build version
 	 * @param output The output stream
 	 */
-	public static void createChangelog(boolean isFile, List<VersionInfo> versions, Writer output, String templateFile) {
+	public static void createChangelog(List<VersionInfo> versions, Writer output, String templateFile) {
 		// assemble the JSON hash map
     scopes.put("versions", versions);
 		
 		// Compile the required template and generate some output. This output will 
 		// either be piped to a file or copied into a FOX module.
 		MustacheFactory mf = new DefaultMustacheFactory();
-		Mustache template;
-		if (isFile) {
-			template = mf.compile(templateFile);
-		} else {
-			template = mf.compile(templateFile);
-		}
+		Mustache template = mf.compile(templateFile);
 		template.execute(output, scopes);
 	}
 }

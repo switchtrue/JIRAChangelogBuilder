@@ -57,7 +57,7 @@ public class ChangelogTemplateTest extends TestCase {
 	public void testFileChangelog() throws Exception {
 		System.out.println("fileChangelog");
 		try {
-			ChangelogTemplate.createChangelog(true, versions, output, "file.mustache");
+			ChangelogTemplate.createChangelog(versions, output, "examples/file.mustache");
 		} catch (Exception e) {
 			fail("Exception raised.");
 			e.printStackTrace();
@@ -73,7 +73,7 @@ public class ChangelogTemplateTest extends TestCase {
 	public void testModuleChangelog() throws Exception {
 		System.out.println("moduleChangelog");
 		try {
-			ChangelogTemplate.createChangelog(false, versions, output, "module.mustache");
+			ChangelogTemplate.createChangelog(versions, output, "examples/module.mustache");
 		} catch (Exception e) {
 			fail("Exception raised.");
 			e.printStackTrace();
@@ -92,15 +92,20 @@ public class ChangelogTemplateTest extends TestCase {
 			JiraAPI jira = new JiraAPI("jenkins", "j3nk1ns!", "https://fivium.atlassian.net", "");
 			jira.fetchVersionDetails("TESTPROJ", "2.0.1");
 			String[] files = new String[2];
-			files[0] = "file.mustache";
-			files[1] = "module.mustache";
+			files[0] = "examples/file.mustache";
+			files[1] = "examples/module.mustache";
+			
+			String[] out = new String[2];
+			out[0] = "changelog.txt";
+			out[1] = "changelog.html";
+			
 			ChangelogBuilder clWriter = new ChangelogBuilder();
-			clWriter.build(jira.getVersionInfoList(), "changelog", files);
+			clWriter.build(jira.getVersionInfoList(), out, files);
 			
 			// attempt to open the generated changelog file. If an IOException is thrown, then the file does not exist.
-			FileReader reader = new FileReader("changelog1.txt");
+			FileReader reader = new FileReader("changelog.txt");
 			reader.close();
-			reader = new FileReader("changelog2.txt");
+			reader = new FileReader("changelog.html");
 			reader.close();
 		} catch (IOException e) {
 			fail("File does not exist!");
