@@ -1,0 +1,17 @@
+<html>
+  <head>
+  </head>
+  <body>
+    <h1>Release Notes</h1>
+    {{#versions}}
+    <h2>{{name}}</h2>
+    <p>{{releaseDateText}} {{name}}{{{description}}}</p>
+    <ul>
+      {{#issues}}
+      <li>[{{key}}]: {{{description}}}</li>
+      {{/issues}}
+    </ul>
+    <hr/>
+    {{/versions}}
+  </body>
+</html>
