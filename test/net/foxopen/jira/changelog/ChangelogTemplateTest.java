@@ -15,6 +15,7 @@ import static junit.framework.Assert.fail;
 /**
  * Test case for generating file and module changelog templates
  * @author apigram
+ * @version 1.03.00
  */
 public class ChangelogTemplateTest extends TestCase {
 		LinkedList<Change> issues;
@@ -50,11 +51,12 @@ public class ChangelogTemplateTest extends TestCase {
 
 	/**
 	 * Black-box unit test of createChangelog method, of class ChangelogTemplate.
+	 * @throws Exception
 	 */
 	public void testFileChangelog() throws Exception {
 		System.out.println("fileChangelog");
 		try {
-			ChangelogTemplate.createChangelog(true, versions, output, "file.mustache");
+			ChangelogTemplate.createChangelog(true, versions, output, "file.mustache", LineEnding.NATIVE);
 		} catch (Exception e) {
 			fail("Exception raised.");
 			e.printStackTrace();
@@ -66,11 +68,12 @@ public class ChangelogTemplateTest extends TestCase {
 	
 	/**
 	 * Black-box unit test of createChangelog method, of class ChangelogTemplate.
+	 * @throws Exception
 	 */
 	public void testModuleChangelog() throws Exception {
 		System.out.println("moduleChangelog");
 		try {
-			ChangelogTemplate.createChangelog(false, versions, output, "module.mustache");
+			ChangelogTemplate.createChangelog(false, versions, output, "module.mustache", LineEnding.NATIVE);
 		} catch (Exception e) {
 			fail("Exception raised.");
 			e.printStackTrace();
@@ -81,7 +84,44 @@ public class ChangelogTemplateTest extends TestCase {
 	}
 	
 	/**
-	 * Black-box regression test for integrating the new template module with the existing program base.
+	 * White-box unit test of newline normalisation within ChangelogTemplate.
+	 * @throws Exception 
+	 * 
+	 */
+	public void testChangelogLineEndings() throws Exception {
+		System.out.println("changelogLineEndings");
+		
+		String LF = System.getProperty("line.separator");
+		try {
+			
+			ChangelogTemplate.createChangelog(false, versions, output, "module.mustache", LineEnding.NIX);
+			System.out.println("UNIX newlines:");
+			System.out.println(output.toString());
+			assertFalse("UNIX line ending not converted properly.", (output.toString().contains("\r\n")));
+			output.flush();
+			
+			ChangelogTemplate.createChangelog(false, versions, output, "module.mustache", LineEnding.WINDOWS);
+			System.out.println("Windows newlines:");
+			System.out.println(output.toString());
+			assertTrue("Windows line ending not converted properly.", (output.toString().contains("\r\n")));
+			output.flush();
+			
+			ChangelogTemplate.createChangelog(false, versions, output, "module.mustache", LineEnding.NATIVE);
+			System.out.println("System newlines:");
+			System.out.println(output.toString());
+			assertTrue("System line ending not converted properly.", (output.toString().contains(LF)));
+		} catch (Exception e) {
+			fail("Exception raised.");
+			e.printStackTrace();
+		}
+		
+		assertNotNull("No file output.", output.toString());
+		System.out.println(output.toString());
+	}
+	
+	/**
+	 * White-box regression test for integrating the new template module with the existing program base.
+	 * @throws Exception
 	 */
 	public void testCreateAll() throws Exception {
 		System.out.println("allChangelogs");
@@ -92,7 +132,7 @@ public class ChangelogTemplateTest extends TestCase {
 			files[0] = "file.mustache";
 			files[1] = "module.mustache";
 			ChangelogBuilder clWriter = new ChangelogBuilder();
-			clWriter.build(jira.getVersionInfoList(), "changelog", files);
+			clWriter.build(jira.getVersionInfoList(), "changelog", files, LineEnding.NATIVE);
 			
 			// attempt to open the generated changelog file. If an IOException is thrown, then the file does not exist.
 			FileReader reader = new FileReader("changelog1.txt");

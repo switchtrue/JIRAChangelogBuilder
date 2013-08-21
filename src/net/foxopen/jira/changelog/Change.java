@@ -5,6 +5,7 @@ import java.util.Comparator;
 /**
  * Represents a JIRA issue for display in the changelog.
  * @author apigram
+ * @version 1.03.00
  */
 public class Change {
   private String name;
@@ -13,8 +14,9 @@ public class Change {
 		
 	/**
 	 * Default constructor that accepts a name and changelog description for a JIRA issue.
-	 * @param n Issue name
-	 * @param d Issue changelog description
+	 * @param name Issue name.
+	 * @param description Issue changelog description.
+	 * @param type Issue type.
 	 */
 	public Change(String name, String description, String type) {
 		this.name = name;
@@ -25,7 +27,7 @@ public class Change {
 	
 	/**
 	 * Obtain the JIRA identifier of the issue
-	 * @return JIRA issue identifier
+	 * @return JIRA issue identifier.
 	 */
 	final String getName()
 	{
@@ -44,7 +46,7 @@ public class Change {
 	
 	/**
 	 * Obtain the changelog description for the issue
-	 * @return Changelog description
+	 * @return Changelog description.
 	 */
 	final String getDescription()
 	{

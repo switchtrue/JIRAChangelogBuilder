@@ -1,10 +1,8 @@
 package net.foxopen.jira.changelog;
 
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
-import java.io.StringWriter;
 
 /**
  * Build the changelog as text from a given list of VersionInfo instances.
@@ -19,8 +17,11 @@ public class ChangelogBuilder
    * 
    * @param versionInfoList The list of JIRA versions to build the changelog for as VersionInfo objects.
    * The change log will be generated in the order that the VersionInfo objects are in the list.
+	 * @param filename Output file name.
+	 * @param filename A list of template names.
+	 * @param ending A value indicating the kind of newlines to be used in the changelog file.
    */
-  public void build(List<VersionInfo> versionInfoList, String filename, String[] templates)
+  public void build(List<VersionInfo> versionInfoList, String filename, String[] templates, LineEnding ending)
   {
 		FileWriter writer = null;
 		int fileIndex = 1;
@@ -31,7 +32,7 @@ public class ChangelogBuilder
 				if (t != null) {
 					Logger.log("Writing " + filename + (fileIndex) + ".txt");
 					writer = new FileWriter(filename + (fileIndex++) + ".txt");
-					ChangelogTemplate.createChangelog(true, versionInfoList, writer, t);
+					ChangelogTemplate.createChangelog(true, versionInfoList, writer, t, ending);
 					writer.flush();
 					writer.close();
 				}
