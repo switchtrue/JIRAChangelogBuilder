@@ -34,10 +34,10 @@ Testing
 -------
 
 In order to execute the unit tests properly (and build/install the program), you must create a file named credentials.properties and place it in the base directory. In this file, add the following values:
-  * `url = <URL>` where <URL> is the web address of the JIRA instance.
-  * `username = <username>` where <username> is the username of a user that can access the JIRA instance.
-  * `password = <password>` where <password> is the password for the specified user.
-  * `project = <project>` where <project> is the identifier of the JIRA project.
-  * `version = <version>` where <version> is the number of the version for which to generate the changelogs.
+  * `url = <URL>` where `<URL>` is the web address of the JIRA instance.
+  * `username = <username>` where `<username>` is the username of a user that can access the JIRA instance.
+  * `password = <password>` where `<password>` is the password for the specified user.
+  * `project = <project>` where `<project>` is the identifier of the JIRA project.
+  * `version = <version>` where `<version>` is the number of the version for which to generate the changelogs.
 
 Tests can be manually executed by running 'mvn test' from the base directory.
