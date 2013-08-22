@@ -111,8 +111,8 @@ public class ChangelogTemplateTest extends TestCase {
 		args[0] = properties.getProperty("url");
 		args[1] = properties.getProperty("username");
 		args[2] = properties.getProperty("password");
-		args[3] = "TESTPROJ";
-		args[4] = "2.0.2";
+		args[3] = properties.getProperty("project");
+		args[4] = properties.getProperty("version");
 		args[5] = "examples/html.mustache";
 		args[6] = "--debug";
 		args[7] = "--changelog-file-name";
