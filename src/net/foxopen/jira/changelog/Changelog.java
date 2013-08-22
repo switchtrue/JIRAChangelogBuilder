@@ -135,7 +135,7 @@ public class Changelog
 			// default all filenames to changelog.txt if none have been specified
 			files = new String[templates.length];
 			for (int i = 0; i < files.length; i++) {
-				files[i] = "changelog.txt";
+				files[i] = "changelog" + i +".txt";
 			}
 		}
     clWriter.build(jiraApi.getVersionInfoList(), files, templates, ending);
