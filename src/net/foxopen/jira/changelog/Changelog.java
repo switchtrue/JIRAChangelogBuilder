@@ -32,7 +32,7 @@ public class Changelog
   }
 
   /**
-   * Main function
+   * Main function.
    * 
    * @param args Arguments passed in from the command line
    */
@@ -130,6 +130,5 @@ public class Changelog
     clWriter.build(jiraApi.getVersionInfoList(), files, templates);
 
     Logger.log("Done - Success!");
-    System.exit(0);
   }
 }

@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Collection;
 
 /**
  * Basic class to store metadata about a JIRA version including label,
@@ -27,7 +28,7 @@ public class VersionInfo implements Serializable
   private Date releaseDate;
   private String dateText;
   private LinkedList<Change> issues;
-  private HashMap<String, Type> typeMap; // stores the issues by type
+  private HashMap<String, Type> issueTypes; // stores the issues by type
 
   /**
    * VersionInfo constructor accepting all require information as parameters.
@@ -52,13 +53,16 @@ public class VersionInfo implements Serializable
 
     // Initialise the hashmap and create the sub-lists.
     // The key is purely for lookup when inserting issues. It is not used for templating at all.
-    typeMap = new HashMap<String, Type>();
+    issueTypes = new HashMap<String, Type>();
 
     for (Change c : this.issues) {
-      Type t = typeMap.get(c.getType());
+      Type t = issueTypes.get(c.getType());
       if (t == null) {
-        typeMap.put(c.getType(), new Type(c.getType()));
+				// add the type to the list, then add the issue to that type.
+        issueTypes.put(c.getType(), new Type(c.getType()));
+				issueTypes.get(c.getType()).issues.add(c);
       } else {
+				// type already exists so add the issue to that type.
         t.issues.add(c);
       }
     }
@@ -70,9 +74,9 @@ public class VersionInfo implements Serializable
    * 
    * @return The list of types
    */
-  public HashMap<String, Type> getIssueTypes()
+  public Collection<Type> getIssueTypes()
   {
-    return typeMap;
+    return issueTypes.values();
   }
 
   /**

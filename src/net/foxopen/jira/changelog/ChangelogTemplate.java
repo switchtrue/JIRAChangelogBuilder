@@ -22,12 +22,9 @@ public class ChangelogTemplate
   /**
    * Generate and output a changelog based off a template file
    * 
-   * @param isFile If the changelog is for a file, set this parameter to true.
-   *          Otherwise, set this parameter to false.
-   * @param issues A collection of JIRA issues with an identifier and changelog
-   *          description
-   * @param version The build version
+   * @param versions A collection of JIRA versions with their respective issues
    * @param output The output stream
+	 * @param templateFile The filename of the template file to use.
    */
   public static void createChangelog(List<VersionInfo> versions, Writer output, String templateFile)
   {

@@ -11,6 +11,7 @@ import junit.framework.TestCase;
 import java.util.LinkedList;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.fail;
+import java.util.Properties;
 
 /**
  * Test case for generating file and module changelog templates
@@ -40,8 +41,7 @@ public class ChangelogTemplateTest extends TestCase {
 		versions.add(version);
 		version = new VersionInfo("2.0.2", "Bug fix release for 2.0.0", new Date(), issues);
 		versions.add(version);
-		
-		
+
 		output = new StringWriter();
 	}
 	
@@ -52,12 +52,12 @@ public class ChangelogTemplateTest extends TestCase {
 	}
 
 	/**
-	 * Black-box unit test of createChangelog method, of class ChangelogTemplate.
+	 * White-box unit test of createChangelog method, of class ChangelogTemplate.
 	 */
-	public void testFileChangelog() throws Exception {
-		System.out.println("fileChangelog");
+	public void testTextChangelog() throws Exception {
+		System.out.println("textChangelog");
 		try {
-			ChangelogTemplate.createChangelog(versions, output, "examples/file.mustache");
+			ChangelogTemplate.createChangelog(versions, output, "examples/plain-text.mustache");
 		} catch (Exception e) {
 			fail("Exception raised.");
 			e.printStackTrace();
@@ -68,12 +68,12 @@ public class ChangelogTemplateTest extends TestCase {
 	}
 	
 	/**
-	 * Black-box unit test of createChangelog method, of class ChangelogTemplate.
+	 * White-box unit test of createChangelog method, of class ChangelogTemplate.
 	 */
-	public void testModuleChangelog() throws Exception {
-		System.out.println("moduleChangelog");
+	public void testHTMLChangelog() throws Exception {
+		System.out.println("HTMLChangelog");
 		try {
-			ChangelogTemplate.createChangelog(versions, output, "examples/module.mustache");
+			ChangelogTemplate.createChangelog(versions, output, "examples/html.mustache");
 		} catch (Exception e) {
 			fail("Exception raised.");
 			e.printStackTrace();
@@ -84,35 +84,44 @@ public class ChangelogTemplateTest extends TestCase {
 	}
 	
 	/**
-	 * Black-box regression test for integrating the new template module with the existing program base.
+	 * White-box unit test of createChangelog method, of class ChangelogTemplate.
 	 */
-	public void testCreateAll() throws Exception {
-		System.out.println("allChangelogs");
+	public void testXMLChangelog() throws Exception {
+		System.out.println("XMLChangelog");
 		try {
-			JiraAPI jira = new JiraAPI("jenkins", "j3nk1ns!", "https://fivium.atlassian.net", "");
-			jira.fetchVersionDetails("TESTPROJ", "2.0.1");
-			String[] files = new String[2];
-			files[0] = "examples/file.mustache";
-			files[1] = "examples/module.mustache";
-			
-			String[] out = new String[2];
-			out[0] = "changelog.txt";
-			out[1] = "changelog.html";
-			
-			ChangelogBuilder clWriter = new ChangelogBuilder();
-			clWriter.build(jira.getVersionInfoList(), out, files);
-			
-			// attempt to open the generated changelog file. If an IOException is thrown, then the file does not exist.
-			FileReader reader = new FileReader("changelog.txt");
-			reader.close();
-			reader = new FileReader("changelog.html");
-			reader.close();
-		} catch (IOException e) {
-			fail("File does not exist!");
-			System.err.println(e.getMessage());
+			ChangelogTemplate.createChangelog(versions, output, "examples/xml.mustache");
 		} catch (Exception e) {
 			fail("Exception raised.");
-			System.err.println(e.getMessage());
+			e.printStackTrace();
 		}
+		
+		assertNotNull("No file output.", output.toString());
+		System.out.println(output.toString());
+	}
+	
+	/**
+	 * Black-box integration test for a complete run of the program.
+	 * @throws Exception 
+	 */
+	public void testFullRun() throws Exception {
+		Properties properties = new Properties();
+		properties.load(new FileInputStream("credentials.properties"));
+		System.out.println("fullRun");
+		String[] args = new String[9];
+		args[0] = "https://fivium.atlassian.net";
+		args[1] = properties.getProperty("username");
+		args[2] = properties.getProperty("password");
+		args[3] = "TESTPROJ";
+		args[4] = "2.0.2";
+		args[5] = "examples/html.mustache";
+		args[6] = "--debug";
+		args[7] = "--changelog-file-name";
+		args[8] = "changelog.html";
+		
+		// wrapper function has same effect as main, minus the System.exit call.
+		Changelog.main(args);
+		
+		File f = new File("changelog.html");
+		assertTrue(f.exists());
 	}
 }
