@@ -108,7 +108,7 @@ public class ChangelogTemplateTest extends TestCase {
 		properties.load(new FileInputStream("credentials.properties"));
 		System.out.println("fullRun");
 		String[] args = new String[9];
-		args[0] = "https://fivium.atlassian.net";
+		args[0] = properties.getProperty("url");
 		args[1] = properties.getProperty("username");
 		args[2] = properties.getProperty("password");
 		args[3] = "TESTPROJ";
