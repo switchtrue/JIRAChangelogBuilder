@@ -89,22 +89,7 @@ public class ChangelogTemplateTest extends TestCase {
 	public void testXMLChangelog() throws Exception {
 		System.out.println("XMLChangelog");
 		try {
-			JiraAPI jira = new JiraAPI("jenkins", "j3nk1ns!", "https://fivium.atlassian.net", "", "");
-			jira.fetchVersionDetails("TESTPROJ", "2.0.1");
-			String[] files = new String[2];
-			files[0] = "file.mustache";
-			files[1] = "module.mustache";
-			ChangelogBuilder clWriter = new ChangelogBuilder();
-			clWriter.build(jira.getVersionInfoList(), "changelog", files);
-			
-			// attempt to open the generated changelog file. If an IOException is thrown, then the file does not exist.
-			FileReader reader = new FileReader("changelog1.txt");
-			reader.close();
-			reader = new FileReader("changelog2.txt");
-			reader.close();
-		} catch (IOException e) {
-			fail("File does not exist!");
-			System.err.println(e.getMessage());
+			ChangelogTemplate.createChangelog(versions, output, "examples/xml.mustache");
 		} catch (Exception e) {
 			fail("Exception raised.");
 			e.printStackTrace();

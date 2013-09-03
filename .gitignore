@@ -19,3 +19,5 @@ changelog*
 target
 lib
 credentials.properties
+!/src/net/foxopen/jira/changelog/
+!/test/net/foxopen/jira/changelog/

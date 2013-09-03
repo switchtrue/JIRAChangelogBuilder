@@ -87,6 +87,9 @@ public class Changelog
             System.exit(2);
           }
           Logger.log("--changelog-file-name found. Using " + filenameList + " as changelog files.");
+				} else if (args[currentArgument].equals("--changelog-description-field")) {
+					descriptionField = args[++currentArgument];
+					Logger.log("--changelog-description-field found. Using " + descriptionField + " as the Changelog Description field.");
         } else {
           Logger.err("Unknown argument: " + args[currentArgument]);
           System.exit(2);
@@ -116,7 +119,7 @@ public class Changelog
       }
     }
 
-    JiraAPI jiraApi = new JiraAPI(jiraUsername, jiraPassword, jiraURL, jql);
+    JiraAPI jiraApi = new JiraAPI(jiraUsername, jiraPassword, jiraURL, jql, descriptionField);
 
     if (objectCachePath != null) {
       VersionInfoCache cache = new VersionInfoCache(jiraProjectKey, objectCachePath);
@@ -128,10 +131,10 @@ public class Changelog
     Logger.log("Building changelog files.");
 
     if (filenameList == null) {
-      // default all filenames to changelog.txt if none have been specified
+      // default all filenames to changelog#.txt if none have been specified
       files = new String[templates.length];
       for (int i = 0; i < files.length; i++) {
-        files[i] = "changelog.txt";
+        files[i] = "changelog" + i + ".txt";
       }
     }
     clWriter.build(jiraApi.getVersionInfoList(), files, templates);
