@@ -116,14 +116,6 @@ public class Changelog {
             + "\n  JIRA password: " + jiraPassword.substring(0, 1) + "*****" + jiraPassword.substring(jiraPassword.length() - 1)
             + "\n  Template files: " + templateList);
 
-    Logger.log("Starting with parameters: "
-            + "\n  Version: " + versionName
-            + "\n  JIRA Project Key: " + jiraProjectKey
-            + "\n  JIRA URL: " + jiraURL
-            + "\n  JIRA username: " + jiraUsername
-            + "\n  JIRA password: " + jiraPassword.substring(0, 1) + "*****" + jiraPassword.substring(jiraPassword.length() - 1)
-            + "\n  Template files: " + templateList);
-
     File f;
     for (int i = 0; i < templates.length; i++) {
       f = new File(templates[i]);
