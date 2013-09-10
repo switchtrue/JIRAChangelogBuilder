@@ -22,8 +22,12 @@ public class ChangelogBuilder {
    * @param templates A collection of template files to use for writing the
    * changelog files. The change log will be generated in the order that the
    * VersionInfo objects are in the list.
+   * @param filename Output file name.
+   * @param filename A list of template names.
+   * @param ending A value indicating the kind of newlines to be used in the
+   * changelog file.
    */
-  public void build(List<VersionInfo> versionInfoList, String[] files, String[] templates) {
+  public void build(List<VersionInfo> versionInfoList, String[] files, String[] templates, LineEnding ending) {
     FileWriter writer = null;
     int fileIndex = 0;
 
@@ -33,7 +37,7 @@ public class ChangelogBuilder {
         if (t != null) {
           Logger.log("Writing " + files[fileIndex]);
           writer = new FileWriter(files[fileIndex++]);
-          ChangelogTemplate.createChangelog(versionInfoList, writer, t);
+          ChangelogTemplate.createChangelog(versionInfoList, writer, t, ending);
           writer.flush();
           writer.close();
         }

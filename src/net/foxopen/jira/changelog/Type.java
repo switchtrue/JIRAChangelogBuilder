@@ -10,6 +10,7 @@ import java.util.LinkedList;
  * Defines an issue category (bug, task, support ticket, etc.)
  *
  * @author apigram
+ * @version 1.03.00
  */
 public class Type {
 

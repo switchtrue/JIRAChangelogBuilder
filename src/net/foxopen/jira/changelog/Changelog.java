@@ -28,6 +28,7 @@ public class Changelog {
     System.out.println("\t--object-cache-path /some/path: The path on disk to the cache, if you do not use this, no cache will be used. Using a cache is highly recommended.");
     System.out.println("\t--debug: Print debug/logging information to standard out. This will also force errors to go to the standard out and exit with code 0 rather than 1.");
     System.out.println("\t--changelog-description-field 'field_name': The name of the field in JIRA you wish to use as the changelog description field. If you do not use this, it will default to the summary field.");
+    System.out.println("\t--eol-style (NATIVE|CRLF|LF): The type of line endings you wish the changelog files to use. Valid values are NATIVE (system line endings), CRLF (Windows line endings) or LF (UNIX line endings). If you do not use this, the changelogs will use the default system line endings.");
   }
 
   /**
@@ -62,13 +63,14 @@ public class Changelog {
     String files[] = null;
     String objectCachePath = null;
     String descriptionField = null;
+    LineEnding ending = LineEnding.NATIVE; // default to native line endings
     for (; currentArgument < args.length; currentArgument++) {
       try {
         if (args[currentArgument].equals("--debug")) {
           Logger.enable();
           Logger.log("--debug flag found. Debug logging enabled.");
         } else if (args[currentArgument].equals("--jql")) {
-          // extract the JQL string, replace the *s with spaces, and replace
+          // extract the JQL string, replace the *s with spaces, and replace 
           // brackets with quotation marks (maven strips quotation marks)
           jql = args[++currentArgument];
           jql = jql.replaceAll("_", " ");
@@ -85,6 +87,13 @@ public class Changelog {
             System.exit(2);
           }
           Logger.log("--changelog-file-name found. Using " + filenameList + " as changelog files.");
+        } else if (args[currentArgument].equals("--eol-style")) {
+          ending = LineEnding.getEnding(args[++currentArgument]);
+          if (ending == null) {
+            // invalid style, log error and terminate
+            Logger.err("Unknown line ending style flag.");
+            System.exit(4);
+          }
         } else if (args[currentArgument].equals("--changelog-description-field")) {
           descriptionField = args[++currentArgument];
           Logger.log("--changelog-description-field found. Using " + descriptionField + " as the Changelog Description field.");
@@ -95,7 +104,7 @@ public class Changelog {
       } catch (ArrayIndexOutOfBoundsException e) {
         // Assuming this has come from args[++currentArgument] in the above try
         // block
-        Logger.err("Malformed arguments. '" + args[currentArgument - 1] + "' requires a following argument");
+        Logger.err("Malformed arguments. '" + args[currentArgument - 1] + "' requires a following argument.");
         System.exit(3);
       }
     }
@@ -107,7 +116,15 @@ public class Changelog {
             + "\n  JIRA password: " + jiraPassword.substring(0, 1) + "*****" + jiraPassword.substring(jiraPassword.length() - 1)
             + "\n  Template files: " + templateList);
 
-    File f = null;
+    Logger.log("Starting with parameters: "
+            + "\n  Version: " + versionName
+            + "\n  JIRA Project Key: " + jiraProjectKey
+            + "\n  JIRA URL: " + jiraURL
+            + "\n  JIRA username: " + jiraUsername
+            + "\n  JIRA password: " + jiraPassword.substring(0, 1) + "*****" + jiraPassword.substring(jiraPassword.length() - 1)
+            + "\n  Template files: " + templateList);
+
+    File f;
     for (int i = 0; i < templates.length; i++) {
       f = new File(templates[i]);
       if (!f.exists()) {
@@ -134,7 +151,7 @@ public class Changelog {
         files[i] = "changelog" + i + ".txt";
       }
     }
-    clWriter.build(jiraApi.getVersionInfoList(), files, templates);
+    clWriter.build(jiraApi.getVersionInfoList(), files, templates, ending);
 
     Logger.log("Done - Success!");
   }
