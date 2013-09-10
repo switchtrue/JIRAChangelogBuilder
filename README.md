@@ -1,8 +1,7 @@
-
 JIRAChangelogBuilder
 ====================
 
-Communicates with [Atlassians JIRA](https://www.atlassian.com/software/jira) and generates a change log for a given JIRA Project Version.
+Communicates with [Atlassians JIRA](https://www.atlassian.com/software/jira) and generates a changelog based on a customisable template file for a given JIRA query.
 
 Compilation
 -----------
