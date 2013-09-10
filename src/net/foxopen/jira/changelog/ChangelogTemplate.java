@@ -3,6 +3,7 @@
  * and open the template in the editor.
  */
 package net.foxopen.jira.changelog;
+
 import java.util.HashMap;
 import java.util.List;
 import java.io.Writer;
@@ -13,10 +14,12 @@ import com.github.mustachejava.*;
 /**
  * Incorporates the base logic for Mustache templates for changelogs saved as 
  * either a file or into a FOX module.
+ *
  * @author apigram
  * @version 1.03.00
  */
 public class ChangelogTemplate {
+
   static HashMap<String, Object> scopes = new HashMap<String, Object>();
 	static String LF;
     
@@ -28,6 +31,7 @@ public class ChangelogTemplate {
 	 * @param output The output stream.
 	 * @param templateFile The template file to use when generating the changelog.
 	 * @param ending A value indicating the kind of newlines to be used in the changelog file.
+   * @param templateFile The filename of the template file to use.
 	 */
 	public static void createChangelog(List<VersionInfo> versions, Writer output, String templateFile, LineEnding ending) {
 		StringWriter out = new StringWriter();

@@ -12,6 +12,12 @@ bin
 
 .changelogcache/*
 .nb*
+nb*
 
 build
+changelog*
 target
+lib
+credentials.properties
+!/src/net/foxopen/jira/changelog/
+!/test/net/foxopen/jira/changelog/

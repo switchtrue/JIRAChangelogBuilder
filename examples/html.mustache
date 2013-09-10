@@ -1,0 +1,34 @@
+<html>
+  <head>
+  </head>
+  <body>
+    <h1>Release Notes</h1>
+    {{#versions}}
+    <h2>{{name}}</h2>
+    <p>{{releaseDateText}} {{name}}{{{description}}}</p>
+    <ul>
+      {{#issues}}
+      <li>[{{key}}]: {{{description}}}</li>
+      {{/issues}}
+    </ul>
+    <hr/>
+    {{/versions}}
+    <h1>Issues by Type</h1>
+    {{#versions}}
+    <h2>{{name}}</h2>
+    <p>{{releaseDateText}} {{name}}{{{description}}}</p>
+    <ul>
+      {{#issueTypes}}
+      <li>{{name}}
+        <ul>
+          {{#issues}}
+          <li>[{{key}}]: {{{description}}}</li>
+          {{/issues}}
+        </ul>
+      </li>
+      {{/issueTypes}}
+    </ul>
+    <hr/>
+    {{/versions}}
+  </body>
+</html>

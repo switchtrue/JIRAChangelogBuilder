@@ -1,0 +1,14 @@
+<changelog>
+{{#versions}}
+  <version name="{{name}}" release-date="{{releaseDateText}}">
+  	<issue-list>
+  	  {{#issues}}
+  	  <issue key="{{key}}" type="{{type}}">
+  	    {{{description}}}
+  	  </issue>
+  	  {{/issues}}
+  	</issue-list>
+  </version>
+{{/versions}}
+</changelog>
+
