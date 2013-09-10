@@ -128,8 +128,8 @@ public class ChangelogTemplateTest extends TestCase {
     File f = new File("changelog.html");
     assertTrue(f.exists());
   }
-  
-  public void testLineEndings() throws Exception  {
+
+  public void testLineEndings() throws Exception {
     System.out.println("lineEndings");
     FileWriter out1 = new FileWriter("testNative.txt");
     FileWriter out2 = new FileWriter("testWindows.txt");
@@ -142,7 +142,7 @@ public class ChangelogTemplateTest extends TestCase {
       fail("Exception raised.");
       e.printStackTrace();
     }
-    
+
     // manually check the result for this test case
     out1.close();
     out2.close();
