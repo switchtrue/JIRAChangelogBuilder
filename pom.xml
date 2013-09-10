@@ -4,7 +4,7 @@
   
   <groupId>net.foxopen.jira.changelog</groupId>
   <artifactId>jira-changelog-builder</artifactId>
-  <version>1.04.00</version>
+  <version>1.04.01</version>
   <packaging>jar</packaging>
   
   <name>JIRAChangelogBuilder</name>
@@ -48,7 +48,7 @@
       <artifactId>jersey-multipart</artifactId>
       <groupId>com.sun.jersey.contribs</groupId>
       <type>jar</type>
-      <version>1.8</version>
+      <version>1.5</version>
     </dependency>
   </dependencies>
  

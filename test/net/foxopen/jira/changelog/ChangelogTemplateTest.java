@@ -12,6 +12,7 @@ import java.util.LinkedList;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.fail;
 import java.util.Properties;
+import junit.framework.Assert;
 
 /**
  * Test case for generating file and module changelog templates
@@ -59,7 +60,7 @@ public class ChangelogTemplateTest extends TestCase {
   public void testTextChangelog() throws Exception {
     System.out.println("textChangelog");
     try {
-      ChangelogTemplate.createChangelog(versions, output, "examples/plain-text.mustache");
+      ChangelogTemplate.createChangelog(versions, output, "examples/plain-text.mustache", LineEnding.NATIVE);
     } catch (Exception e) {
       fail("Exception raised.");
       e.printStackTrace();
@@ -75,7 +76,7 @@ public class ChangelogTemplateTest extends TestCase {
   public void testHTMLChangelog() throws Exception {
     System.out.println("HTMLChangelog");
     try {
-      ChangelogTemplate.createChangelog(versions, output, "examples/html.mustache");
+      ChangelogTemplate.createChangelog(versions, output, "examples/html.mustache", LineEnding.NATIVE);
     } catch (Exception e) {
       fail("Exception raised.");
       e.printStackTrace();
@@ -91,7 +92,7 @@ public class ChangelogTemplateTest extends TestCase {
   public void testXMLChangelog() throws Exception {
     System.out.println("XMLChangelog");
     try {
-      ChangelogTemplate.createChangelog(versions, output, "examples/xml.mustache");
+      ChangelogTemplate.createChangelog(versions, output, "examples/xml.mustache", LineEnding.NATIVE);
     } catch (Exception e) {
       fail("Exception raised.");
       e.printStackTrace();
@@ -126,5 +127,26 @@ public class ChangelogTemplateTest extends TestCase {
 
     File f = new File("changelog.html");
     assertTrue(f.exists());
+  }
+
+  public void testLineEndings() throws Exception {
+    System.out.println("lineEndings");
+    FileWriter out1 = new FileWriter("testNative.txt");
+    FileWriter out2 = new FileWriter("testWindows.txt");
+    FileWriter out3 = new FileWriter("testNIX.txt");
+    try {
+      ChangelogTemplate.createChangelog(versions, out1, "examples/plain-text.mustache", LineEnding.NATIVE);
+      ChangelogTemplate.createChangelog(versions, out2, "examples/plain-text.mustache", LineEnding.WINDOWS);
+      ChangelogTemplate.createChangelog(versions, out3, "examples/plain-text.mustache", LineEnding.NIX);
+    } catch (Exception e) {
+      fail("Exception raised.");
+      e.printStackTrace();
+    }
+
+    // manually check the result for this test case
+    out1.close();
+    out2.close();
+    out3.close();
+    assertTrue(true);
   }
 }

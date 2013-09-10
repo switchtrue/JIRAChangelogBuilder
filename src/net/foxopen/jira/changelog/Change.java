@@ -6,6 +6,7 @@ import java.util.Comparator;
  * Represents a JIRA issue for display in the changelog.
  *
  * @author apigram
+ * @version 1.03.00
  */
 public class Change {
 
