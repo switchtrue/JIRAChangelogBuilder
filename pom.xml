@@ -48,7 +48,7 @@
       <artifactId>jersey-multipart</artifactId>
       <groupId>com.sun.jersey.contribs</groupId>
       <type>jar</type>
-      <version>1.8</version>
+      <version>1.5</version>
     </dependency>
   </dependencies>
  
