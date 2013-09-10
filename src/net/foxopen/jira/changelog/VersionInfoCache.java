@@ -12,14 +12,13 @@ import java.io.ObjectOutputStream;
  * A disk-based cache for VersionInfo instances. VersionInfo objects are
  * serialized to disk with a file name of projectkey_versionname.ser. These can
  * be deserialized and used upon request.
- * 
+ *
  * @author mleonard87
- * 
+ *
  */
-public class VersionInfoCache
-{
-  private final static String SERIALIZED_OBJECT_EXT = ".ser";
+public class VersionInfoCache {
 
+  private final static String SERIALIZED_OBJECT_EXT = ".ser";
   private final String projectKey_;
   private final String cachePath_;
 
@@ -27,12 +26,11 @@ public class VersionInfoCache
    * Constructor to create a cache for this JIRA project. The cache will be
    * located at the cachePath set, if this directory does not exist, it will be
    * created.
-   * 
+   *
    * @param projectKey key used for this project in JIRA.
    * @param cachePath path on disk to the cache.
    */
-  public VersionInfoCache(String projectKey, String cachePath)
-  {
+  public VersionInfoCache(String projectKey, String cachePath) {
     Logger.log("Creating version info cache.");
     projectKey_ = projectKey;
 
@@ -45,11 +43,10 @@ public class VersionInfoCache
   /**
    * Cache a given VersionInfo object by serialising it to disk with a file name
    * of projectkey_versionname.ser.
-   * 
+   *
    * @param versionInfo the VersionInfo instance to be cached.
    */
-  public void cache(VersionInfo versionInfo)
-  {
+  public void cache(VersionInfo versionInfo) {
     String filename = cachePath_ + projectKey_ + "_" + versionInfo.getName() + SERIALIZED_OBJECT_EXT;
     Logger.log("Caching version changelog for version '" + versionInfo.getName() + "' in file: " + filename);
     try {
@@ -66,11 +63,10 @@ public class VersionInfoCache
   /**
    * Deserialize a VersionInfo instance (if found) and return it, thus returning
    * it from the on-disk cache.
-   * 
+   *
    * @param versionName the name of the JIRA project version to retrieve.
    */
-  public VersionInfo getCached(String versionName)
-  {
+  public VersionInfo getCached(String versionName) {
     VersionInfo vi = null;
     try {
       FileInputStream fileIn = new FileInputStream(cachePath_ + projectKey_ + "_" + versionName + SERIALIZED_OBJECT_EXT);

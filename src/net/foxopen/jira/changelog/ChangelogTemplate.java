@@ -12,22 +12,21 @@ import com.github.mustachejava.*;
 /**
  * Incorporates the base logic for Mustache templates for changelogs saved as
  * either a file or into a FOX module.
- * 
+ *
  * @author apigram
  */
-public class ChangelogTemplate
-{
+public class ChangelogTemplate {
+
   static HashMap<String, Object> scopes = new HashMap<String, Object>();
 
   /**
    * Generate and output a changelog based off a template file
-   * 
+   *
    * @param versions A collection of JIRA versions with their respective issues
    * @param output The output stream
-	 * @param templateFile The filename of the template file to use.
+   * @param templateFile The filename of the template file to use.
    */
-  public static void createChangelog(List<VersionInfo> versions, Writer output, String templateFile)
-  {
+  public static void createChangelog(List<VersionInfo> versions, Writer output, String templateFile) {
     // assemble the JSON hash map
     scopes.put("versions", versions);
 

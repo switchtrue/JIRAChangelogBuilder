@@ -4,16 +4,15 @@ import java.io.File;
 
 /**
  * Main class for creating a changelog from JIRA.
- * 
+ *
  * @author apigram
  */
-public class Changelog
-{
+public class Changelog {
+
   /**
    * Show usage of the application.
    */
-  public static void showUsage()
-  {
+  public static void showUsage() {
     System.out.println("Usage:");
     System.out.println("java -jar jira-changelog-builder.jar <JIRA_URL> <JIRA_username> <JIRA_password> <JIRA_project_name> <version> <template_list> [<flags>]");
     System.out.println("<JIRA_URL>: The URL of the JIRA instance (e.g. https://somecompany.atlassian.net).");
@@ -28,16 +27,15 @@ public class Changelog
     System.out.println("\t--jql 'some arbitrary JQL': Append the given JQL to the issue filter. eg 'status = \"Ready for Build\"'");
     System.out.println("\t--object-cache-path /some/path: The path on disk to the cache, if you do not use this, no cache will be used. Using a cache is highly recommended.");
     System.out.println("\t--debug: Print debug/logging information to standard out. This will also force errors to go to the standard out and exit with code 0 rather than 1.");
-		System.out.println("\t--changelog-description-field 'field_name': The name of the field in JIRA you wish to use as the changelog description field. If you do not use this, it will default to the summary field.");
+    System.out.println("\t--changelog-description-field 'field_name': The name of the field in JIRA you wish to use as the changelog description field. If you do not use this, it will default to the summary field.");
   }
 
   /**
    * Main function.
-   * 
+   *
    * @param args Arguments passed in from the command line
    */
-  public static void main(String[] args)
-  {
+  public static void main(String[] args) {
     if (args.length == 1 && args[0].equals("--help")) {
       showUsage();
       System.exit(0);
@@ -63,7 +61,7 @@ public class Changelog
     String filenameList = null;
     String files[] = null;
     String objectCachePath = null;
-		String descriptionField = null;
+    String descriptionField = null;
     for (; currentArgument < args.length; currentArgument++) {
       try {
         if (args[currentArgument].equals("--debug")) {
@@ -87,9 +85,9 @@ public class Changelog
             System.exit(2);
           }
           Logger.log("--changelog-file-name found. Using " + filenameList + " as changelog files.");
-				} else if (args[currentArgument].equals("--changelog-description-field")) {
-					descriptionField = args[++currentArgument];
-					Logger.log("--changelog-description-field found. Using " + descriptionField + " as the Changelog Description field.");
+        } else if (args[currentArgument].equals("--changelog-description-field")) {
+          descriptionField = args[++currentArgument];
+          Logger.log("--changelog-description-field found. Using " + descriptionField + " as the Changelog Description field.");
         } else {
           Logger.err("Unknown argument: " + args[currentArgument]);
           System.exit(2);
@@ -101,14 +99,13 @@ public class Changelog
         System.exit(3);
       }
     }
-    Logger.log("Starting with parameters: " +
-        "\n  Version: " + versionName + 
-        "\n  JIRA Project Key: " + jiraProjectKey + 
-        "\n  JIRA URL: " + jiraURL + 
-        "\n  JIRA username: " + jiraUsername + 
-        "\n  JIRA password: " + jiraPassword.substring(0, 1) + "*****" + jiraPassword.substring(jiraPassword.length() - 1) +
-        "\n  Template files: " + templateList
-        );
+    Logger.log("Starting with parameters: "
+            + "\n  Version: " + versionName
+            + "\n  JIRA Project Key: " + jiraProjectKey
+            + "\n  JIRA URL: " + jiraURL
+            + "\n  JIRA username: " + jiraUsername
+            + "\n  JIRA password: " + jiraPassword.substring(0, 1) + "*****" + jiraPassword.substring(jiraPassword.length() - 1)
+            + "\n  Template files: " + templateList);
 
     File f = null;
     for (int i = 0; i < templates.length; i++) {

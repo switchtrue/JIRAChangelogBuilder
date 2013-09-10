@@ -21,30 +21,30 @@ import com.atlassian.jira.rest.client.internal.jersey.JerseyJiraRestClientFactor
 /**
  * JiraAPI acts as a single point to communicate with JIRA and extract the
  * version information for use with the ChangelogBuilder.
- * 
+ *
  * @author mleonard87
- * 
+ *
  */
-public class JiraAPI
-{
+public class JiraAPI {
+
   private final String username_, password_;
   private final URI jiraServerURI_;
   private String jql_;
-	private String descriptionField;
+  private String descriptionField;
   private LinkedList<VersionInfo> versionList_;
   private VersionInfoCache cache_;
 
   /**
    * JiraAPI Constructor that accepts the basic information require to
    * communicate with a JIRA instance.
-   * 
+   *
    * @param username The username used to authenticate with JIRA.
    * @param password The password used to authenticate with JIRA.
    * @param URL The URL pointing to the JIRA instance.
-	 * @param descriptionField The name of the field in JIRA to use as the changelog description.
+   * @param descriptionField The name of the field in JIRA to use as the
+   * changelog description.
    */
-  public JiraAPI(String username, String password, String URL, String jql, String descriptionField)
-  {
+  public JiraAPI(String username, String password, String URL, String jql, String descriptionField) {
     username_ = username;
     password_ = password;
 
@@ -54,7 +54,7 @@ public class JiraAPI
       jql_ = " and (" + jql + ")";
     }
 
-		this.descriptionField = descriptionField;
+    this.descriptionField = descriptionField;
 
     URI tempURI = null;
     try {
@@ -68,11 +68,10 @@ public class JiraAPI
 
   /**
    * Sets the version info cache
-   * 
+   *
    * @param cache The version info cache.
    */
-  public void setVersionInfoCache(VersionInfoCache cache)
-  {
+  public void setVersionInfoCache(VersionInfoCache cache) {
     cache_ = cache;
   }
 
@@ -82,13 +81,12 @@ public class JiraAPI
    * that version from the serialized java object cache on disk, or pull the
    * list of issues from JIRA. Finally add all these versions to a LinkedList
    * and sort by date descending.
-   * 
+   *
    * @param projectKey The key used for the project in JIRA.
    * @param versionLabel The version label from JIRA (belonging to the project
-   *          specified with projectKey that you are currently building).
+   * specified with projectKey that you are currently building).
    */
-  public void fetchVersionDetails(String projectKey, String versionLabel)
-  {
+  public void fetchVersionDetails(String projectKey, String versionLabel) {
     try {
       // Create the initial JIRA connection.
       Logger.log("Establishing JIRA API connection for generating changelog to " + jiraServerURI_ + ".");
@@ -218,36 +216,33 @@ public class JiraAPI
   /**
    * Gets the list of JIRA versions to be included in the changelog, as well as
    * their issues.
-   * 
+   *
    * @return LinkedList of VersionInfo instances giving details about each JIRA
-   *         version to be included in the change log and their issues. Ordered
-   *         descending by release date.
+   * version to be included in the change log and their issues. Ordered
+   * descending by release date.
    */
-  public LinkedList<VersionInfo> getVersionInfoList()
-  {
+  public LinkedList<VersionInfo> getVersionInfoList() {
     return versionList_;
   }
-
 }
 
 /**
  * Simple comparator that can be used to order by Date objects descending.
- * 
+ *
  * @author leonmi
- * 
+ *
  */
-class DateComparator implements Comparator<VersionInfo>
-{
+class DateComparator implements Comparator<VersionInfo> {
+
   /**
    * Compare the value of two dates. Used to sort issues and versions by date
-   * 
+   *
    * @param a A date to compare with
    * @param b Another date to compare
    * @return -1 if <param>a</param> &gt; <param>b</param>, 1 if <param>a</param>
-   *         &lt; <param>b</param>, otherwise 0
+   * &lt; <param>b</param>, otherwise 0
    */
-  public int compare(VersionInfo a, VersionInfo b)
-  {
+  public int compare(VersionInfo a, VersionInfo b) {
     if (a.getReleaseDate().after(b.getReleaseDate())) {
       return -1;
     } else if (a.getReleaseDate().before(b.getReleaseDate())) {

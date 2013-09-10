@@ -12,17 +12,16 @@ import java.util.Collection;
 /**
  * Basic class to store metadata about a JIRA version including label,
  * description release date and issues that were fixed in this version.
- * 
+ *
  * This class is serializable and will be serialized to cache the results.
- * 
+ *
  * @author mleonard87
- * 
+ *
  */
-public class VersionInfo implements Serializable
-{
+public class VersionInfo implements Serializable {
+
   private static final long serialVersionUID = 4317403361667148998L;
   private final String LS = System.getProperty("line.separator");
-
   private String name;
   private String description;
   private Date releaseDate;
@@ -33,14 +32,13 @@ public class VersionInfo implements Serializable
   /**
    * VersionInfo constructor accepting all require information as parameters.
    * This also ensures that the list of issues fixed in this version are sorted.
-   * 
+   *
    * @param name of the JIRA project version.
    * @param description of the JIRA project version.
    * @param releaseDate of the JIRA project version.
    * @param issueList issues fixed in the JIRA project version.
    */
-  public VersionInfo(String name, String description, Date releaseDate, LinkedList<Change> issueList)
-  {
+  public VersionInfo(String name, String description, Date releaseDate, LinkedList<Change> issueList) {
     this.name = name;
     this.description = description;
     this.releaseDate = releaseDate;
@@ -58,11 +56,11 @@ public class VersionInfo implements Serializable
     for (Change c : this.issues) {
       Type t = issueTypes.get(c.getType());
       if (t == null) {
-				// add the type to the list, then add the issue to that type.
+        // add the type to the list, then add the issue to that type.
         issueTypes.put(c.getType(), new Type(c.getType()));
-				issueTypes.get(c.getType()).issues.add(c);
+        issueTypes.get(c.getType()).issues.add(c);
       } else {
-				// type already exists so add the issue to that type.
+        // type already exists so add the issue to that type.
         t.issues.add(c);
       }
     }
@@ -71,31 +69,28 @@ public class VersionInfo implements Serializable
   /**
    * Gets the list of types used for the module changelog. Used implicitly by
    * mustache
-   * 
+   *
    * @return The list of types
    */
-  public Collection<Type> getIssueTypes()
-  {
+  public Collection<Type> getIssueTypes() {
     return issueTypes.values();
   }
 
   /**
    * Gets the name (version number) of the current version.
-   * 
+   *
    * @return the name of this JIRA version.
    */
-  public String getName()
-  {
+  public String getName() {
     return name;
   }
-  
+
   /**
    * Gets the description (if any) of the current version.
-   * 
+   *
    * @return the description of this JIRA version.
    */
-  public String getDescription()
-  {
+  public String getDescription() {
     // if no description, send a blank string. Otherwise, send the description
     // with a leading line break
     if (description == null) {
@@ -107,41 +102,37 @@ public class VersionInfo implements Serializable
 
   /**
    * Gets the release date of the current version.
-   * 
+   *
    * @return the release date of this JIRA version.
    */
-  public Date getReleaseDate()
-  {
+  public Date getReleaseDate() {
     return releaseDate;
   }
 
   /**
    * Gets the release date as a formatted string
-   * 
+   *
    * @return The release date formatted as dd-MM-yyyy
    */
-  public String getReleaseDateText()
-  {
+  public String getReleaseDateText() {
     return dateText;
   }
 
   /**
    * Gets the list of issues for the current version.
-   * 
+   *
    * @return the list of issues fixed in this JIRA version.
    */
-  List<Change> getIssues()
-  {
+  List<Change> getIssues() {
     return issues;
   }
 
   /**
    * Determines whether the current version has issues associated with it.
-   * 
+   *
    * @return True if this version has issues listed, otherwise false.
    */
-  public boolean hasIssues()
-  {
+  public boolean hasIssues() {
     return !issues.isEmpty();
   }
 }
