@@ -35,7 +35,7 @@ public class VersionInfo implements Serializable
    * This also ensures that the list of issues fixed in this version are sorted.
    * 
    * @param name of the JIRA project version.
-   * @param descriptionm of the JIRA project version.
+   * @param description of the JIRA project version.
    * @param releaseDate of the JIRA project version.
    * @param issueList issues fixed in the JIRA project version.
    */

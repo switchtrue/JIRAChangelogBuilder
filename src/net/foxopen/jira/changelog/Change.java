@@ -17,8 +17,9 @@ public class Change
    * Default constructor that accepts a name and changelog description for a
    * JIRA issue.
    * 
-   * @param n Issue name
-   * @param d Issue changelog description
+   * @param issueKey Issue name.
+	 * @param description Issue changelog description.
+	 * @param issueType Issue type.
    */
   public Change(String issueKey, String description, String issueType)
   {
