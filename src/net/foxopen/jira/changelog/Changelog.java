@@ -20,7 +20,8 @@ public class Changelog {
     System.out.println("<JIRA_password>: The password used to log into JIRA.");
     System.out.println("<JIRA_project_name>: The name of the project in JIRA.");
     System.out.println("<version>: The name of the version this changelog is for.");
-    System.out.println("<template_list>: A CSV list of paths to template files. Each templated changelog is saved into a new file which can be processed at a later stage.");
+    System.out.println("<template_root>: The path on disk to the directory that contains the template files.");
+    System.out.println("<template_list>: A CSV list of template file names. Each templated changelog is saved into a new file which can be processed at a later stage.");
     System.out.println("<flags> (optional): One or more of the following flags:");
     // TODO: If this JQL causes no issues to be returned, it causes a hard
     // error. Handle this more nicely.
@@ -53,6 +54,7 @@ public class Changelog {
     final String jiraPassword = args[currentArgument++];
     final String jiraProjectKey = args[currentArgument++];
     final String versionName = args[currentArgument++];
+    final String templateRoot = args[currentArgument++];
     final String templateList = args[currentArgument++];
 
     String[] templates = templateList.split(",");
@@ -81,6 +83,7 @@ public class Changelog {
           Logger.log("--object-cache-path flag found. Using " + objectCachePath + " as the object cache.");
         } else if (args[currentArgument].equals("--changelog-file-name")) {
           filenameList = args[++currentArgument];
+          filenameList = filenameList.replace("\"", "");
           files = filenameList.split(",");
           if (files.length != templates.length) {
             Logger.err("Output file list does not match template file list.");
@@ -118,7 +121,7 @@ public class Changelog {
 
     File f;
     for (int i = 0; i < templates.length; i++) {
-      f = new File(templates[i]);
+      f = new File(templateRoot + '/' + templates[i]);
       if (!f.exists()) {
         Logger.err("Template file " + f.getName() + " does not exist!");
         System.exit(2);
@@ -143,7 +146,7 @@ public class Changelog {
         files[i] = "changelog" + i + ".txt";
       }
     }
-    clWriter.build(jiraApi.getVersionInfoList(), files, templates, ending);
+    clWriter.build(jiraApi.getVersionInfoList(), files, templateRoot, templates, ending);
 
     Logger.log("Done - Success!");
   }

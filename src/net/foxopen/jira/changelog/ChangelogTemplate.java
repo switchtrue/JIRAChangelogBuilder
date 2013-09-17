@@ -10,6 +10,7 @@ import java.io.Writer;
 import java.io.IOException;
 import java.io.StringWriter;
 import com.github.mustachejava.*;
+import java.io.File;
 
 /**
  * Incorporates the base logic for Mustache templates for changelogs saved as
@@ -22,6 +23,7 @@ public class ChangelogTemplate {
 
   static HashMap<String, Object> scopes = new HashMap<String, Object>();
   static String LF;
+  static String fileRoot;
 
   /**
    * Generate and output a changelog based off a template file.
@@ -40,7 +42,7 @@ public class ChangelogTemplate {
   public static void createChangelog(List<VersionInfo> versions, Writer output, String templateFile, LineEnding ending) {
     StringWriter out = new StringWriter();
     String buffer = null; // templated file content. This buffer is used to convert the line endings.
-    MustacheFactory mf = new DefaultMustacheFactory();
+    MustacheFactory mf = new DefaultMustacheFactory(new File(fileRoot));
     Mustache template = mf.compile(templateFile);
 
     // assemble the JSON hash map

@@ -12,7 +12,6 @@ import java.util.LinkedList;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.fail;
 import java.util.Properties;
-import junit.framework.Assert;
 
 /**
  * Test case for generating file and module changelog templates
@@ -60,7 +59,8 @@ public class ChangelogTemplateTest extends TestCase {
   public void testTextChangelog() throws Exception {
     System.out.println("textChangelog");
     try {
-      ChangelogTemplate.createChangelog(versions, output, "examples/plain-text.mustache", LineEnding.NATIVE);
+      ChangelogTemplate.fileRoot = "examples";
+      ChangelogTemplate.createChangelog(versions, output, "plain-text.mustache", LineEnding.NATIVE);
     } catch (Exception e) {
       fail("Exception raised.");
       e.printStackTrace();
@@ -76,7 +76,8 @@ public class ChangelogTemplateTest extends TestCase {
   public void testHTMLChangelog() throws Exception {
     System.out.println("HTMLChangelog");
     try {
-      ChangelogTemplate.createChangelog(versions, output, "examples/html.mustache", LineEnding.NATIVE);
+      ChangelogTemplate.fileRoot = "examples";
+      ChangelogTemplate.createChangelog(versions, output, "html.mustache", LineEnding.NATIVE);
     } catch (Exception e) {
       fail("Exception raised.");
       e.printStackTrace();
@@ -92,7 +93,8 @@ public class ChangelogTemplateTest extends TestCase {
   public void testXMLChangelog() throws Exception {
     System.out.println("XMLChangelog");
     try {
-      ChangelogTemplate.createChangelog(versions, output, "examples/xml.mustache", LineEnding.NATIVE);
+      ChangelogTemplate.fileRoot = "examples";
+      ChangelogTemplate.createChangelog(versions, output, "xml.mustache", LineEnding.NATIVE);
     } catch (Exception e) {
       fail("Exception raised.");
       e.printStackTrace();
@@ -111,16 +113,19 @@ public class ChangelogTemplateTest extends TestCase {
     Properties properties = new Properties();
     properties.load(new FileInputStream("credentials.properties"));
     System.out.println("fullRun");
-    String[] args = new String[9];
+    String[] args = new String[12];
     args[0] = properties.getProperty("url");
     args[1] = properties.getProperty("username");
     args[2] = properties.getProperty("password");
     args[3] = properties.getProperty("project");
     args[4] = properties.getProperty("version");
-    args[5] = "examples/html.mustache";
-    args[6] = "--debug";
-    args[7] = "--changelog-file-name";
-    args[8] = "changelog.html";
+    args[5] = "examples";
+    args[6] = "html.mustache,plain-text.mustache";
+    args[7] = "--debug";
+    args[8] = "--changelog-file-name";
+    args[9] = "changelog.html,changelog.txt";
+    args[10] = "--object-cache-path";
+    args[11] = "cache";
 
     // wrapper function has same effect as main, minus the System.exit call.
     Changelog.main(args);
@@ -135,9 +140,10 @@ public class ChangelogTemplateTest extends TestCase {
     FileWriter out2 = new FileWriter("testWindows.txt");
     FileWriter out3 = new FileWriter("testNIX.txt");
     try {
-      ChangelogTemplate.createChangelog(versions, out1, "examples/plain-text.mustache", LineEnding.NATIVE);
-      ChangelogTemplate.createChangelog(versions, out2, "examples/plain-text.mustache", LineEnding.WINDOWS);
-      ChangelogTemplate.createChangelog(versions, out3, "examples/plain-text.mustache", LineEnding.NIX);
+      ChangelogTemplate.fileRoot = "examples";
+      ChangelogTemplate.createChangelog(versions, out1, "plain-text.mustache", LineEnding.NATIVE);
+      ChangelogTemplate.createChangelog(versions, out2, "plain-text.mustache", LineEnding.WINDOWS);
+      ChangelogTemplate.createChangelog(versions, out3, "plain-text.mustache", LineEnding.NIX);
     } catch (Exception e) {
       fail("Exception raised.");
       e.printStackTrace();

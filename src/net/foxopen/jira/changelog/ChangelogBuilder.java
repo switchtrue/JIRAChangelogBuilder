@@ -27,9 +27,10 @@ public class ChangelogBuilder {
    * @param ending A value indicating the kind of newlines to be used in the
    * changelog file.
    */
-  public void build(List<VersionInfo> versionInfoList, String[] files, String[] templates, LineEnding ending) {
+  public void build(List<VersionInfo> versionInfoList, String[] files, String templateRoot, String[] templates, LineEnding ending) {
     FileWriter writer = null;
     int fileIndex = 0;
+    ChangelogTemplate.fileRoot = templateRoot;
 
     // build the changelog for the file using the file template.
     try {

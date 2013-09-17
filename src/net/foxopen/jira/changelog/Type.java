@@ -5,6 +5,7 @@
 package net.foxopen.jira.changelog;
 
 import java.util.LinkedList;
+import java.io.Serializable;
 
 /**
  * Defines an issue category (bug, task, support ticket, etc.)
@@ -12,8 +13,8 @@ import java.util.LinkedList;
  * @author apigram
  * @version 1.03.00
  */
-public class Type {
-
+public class Type implements Serializable {
+  private static final long serialVersionUID = 4317423361667148998L;
   String name;
   LinkedList<Change> issues;
 

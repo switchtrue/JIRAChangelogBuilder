@@ -1,6 +1,7 @@
 package net.foxopen.jira.changelog;
 
 import java.util.Comparator;
+import java.io.Serializable;
 
 /**
  * Represents a JIRA issue for display in the changelog.
@@ -8,8 +9,9 @@ import java.util.Comparator;
  * @author apigram
  * @version 1.03.00
  */
-public class Change {
+public class Change implements Serializable {
 
+  private static final long serialVersionUID = 4315403361667148998L;
   private String issueKey;
   private String issueType;
   private String description;
