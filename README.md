@@ -22,6 +22,7 @@ Where the arguments are used as follows:
   *  `<JIRA_password>`: The password used to log into JIRA.
   *  `<JIRA_project_name>`: The name of the project in JIRA.
   *  `<version>`: The name of the version this changelog is for.
+  *  `<template_root>`: The path on disk to the directory containing the mustache template files. All files in `<template_list>` are relative to this path.
   *  `<template_list>`: A CSV list of paths to template files. Each templated changelog is saved into a new file which can be processed at a later stage.
   *  `<flags>` (optional): One or more of the following flags:
     * `--jql "some arbitrary JQL"`: Append the given JQL to the issue filter. eg status = "Ready for Build".
