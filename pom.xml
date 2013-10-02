@@ -4,7 +4,7 @@
   
   <groupId>net.foxopen.jira.changelog</groupId>
   <artifactId>jira-changelog-builder</artifactId>
-  <version>1.05.1</version>
+  <version>1.05.2</version>
   <packaging>jar</packaging>
   
   <name>JIRAChangelogBuilder</name>

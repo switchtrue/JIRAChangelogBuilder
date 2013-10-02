@@ -110,6 +110,7 @@ public class JiraAPI {
 
       if (buildVersion == null) {
         Logger.err("Could not find a version in JIRA matching the version label argument: \"" + versionLabel + "\".");
+        System.exit(1);
       }
 
       Logger.log("Version '" + versionLabel + "' found in JIRA.");
