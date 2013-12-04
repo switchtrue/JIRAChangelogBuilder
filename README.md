@@ -20,7 +20,7 @@ Where the arguments are used as follows:
   *  `<JIRA_URL>`: The URL of the JIRA instance (e.g. https://somecompany.atlassian.net).
   *  `<JIRA_username>`: The username used to log into JIRA.
   *  `<JIRA_password>`: The password used to log into JIRA.
-  *  `<JIRA_project_name>`: The name of the project in JIRA.
+  *  `<JIRA_project_identifier>`: The identifier (key) of the project in JIRA.
   *  `<version>`: The name of the version this changelog is for.
   *  `<template_root>`: The path on disk to the directory containing the mustache template files. All files in `<template_list>` are relative to this path.
   *  `<template_list>`: A CSV list of paths to template files. Each templated changelog is saved into a new file which can be processed at a later stage.
@@ -42,7 +42,7 @@ In order to execute the unit tests properly (and build/install the program), you
   * `url = <URL>` where `<URL>` is the web address of the JIRA instance.
   * `username = <username>` where `<username>` is the username of a user that can access the JIRA instance.
   * `password = <password>` where `<password>` is the password for the specified user.
-  * `project = <project>` where `<project>` is the identifier of the JIRA project.
+  * `project = <project>` where `<project>` is the identifier (key) of the JIRA project.
   * `version = <version>` where `<version>` is the number of the version for which to generate the changelogs.
 
 Tests can be manually executed by running 'mvn test' from the base directory.
