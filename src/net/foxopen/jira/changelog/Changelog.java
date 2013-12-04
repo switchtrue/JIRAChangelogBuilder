@@ -14,11 +14,11 @@ public class Changelog {
    */
   public static void showUsage() {
     System.out.println("Usage:");
-    System.out.println("java -jar jira-changelog-builder.jar <JIRA_URL> <JIRA_username> <JIRA_password> <JIRA_project_name> <version> <template_list> [<flags>]");
+    System.out.println("java -jar jira-changelog-builder.jar <JIRA_URL> <JIRA_username> <JIRA_password> <JIRA_project_key> <version> <template_list> [<flags>]");
     System.out.println("<JIRA_URL>: The URL of the JIRA instance (e.g. https://somecompany.atlassian.net).");
     System.out.println("<JIRA_username>: The username used to log into JIRA.");
     System.out.println("<JIRA_password>: The password used to log into JIRA.");
-    System.out.println("<JIRA_project_name>: The name of the project in JIRA.");
+    System.out.println("<JIRA_project_key>: The key of the project in JIRA.");
     System.out.println("<version>: The name of the version this changelog is for.");
     System.out.println("<template_root>: The path on disk to the directory that contains the template files.");
     System.out.println("<template_list>: A CSV list of template file names. Each templated changelog is saved into a new file which can be processed at a later stage.");
