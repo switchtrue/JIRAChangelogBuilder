@@ -20,7 +20,7 @@ Where the arguments are used as follows:
   *  `<JIRA_URL>`: The URL of the JIRA instance (e.g. https://somecompany.atlassian.net).
   *  `<JIRA_username>`: The username used to log into JIRA.
   *  `<JIRA_password>`: The password used to log into JIRA.
-  *  `<JIRA_project_identifier>`: The identifier (key) of the project in JIRA.
+  *  `<JIRA_project_key>`: The key of the project in JIRA.
   *  `<version>`: The name of the version this changelog is for.
   *  `<template_root>`: The path on disk to the directory containing the mustache template files. All files in `<template_list>` are relative to this path.
   *  `<template_list>`: A CSV list of paths to template files. Each templated changelog is saved into a new file which can be processed at a later stage.
