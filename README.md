@@ -1,7 +1,7 @@
 JIRAChangelogBuilder
 ====================
 
-Communicates with [Atlassians JIRA](https://www.atlassian.com/software/jira) and generates a changelog based on a customisable template file for a given JIRA query.
+Communicates with [Atlassians JIRA](https://www.atlassian.com/software/jira) and generates a changelog based on a customisable template file for a given [JIRA query (JQL)](https://confluence.atlassian.com/display/JIRA/Advanced+Searching).
 
 Compilation
 -----------
