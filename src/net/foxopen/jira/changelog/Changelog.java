@@ -19,7 +19,7 @@ public class Changelog {
     System.out.println("<JIRA_username>: The username used to log into JIRA.");
     System.out.println("<JIRA_password>: The password used to log into JIRA.");
     System.out.println("<JIRA_project_key>: The key of the project in JIRA.");
-    System.out.println("<version>: The name of the version this changelog is for.");
+    System.out.println("<version>: Specifies up to which version the changelog should be generated.");
     System.out.println("<template_root>: The path on disk to the directory that contains the template files.");
     System.out.println("<template_list>: A CSV list of template file names. Each templated changelog is saved into a new file which can be processed at a later stage.");
     System.out.println("<flags> (optional): One or more of the following flags:");
