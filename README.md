@@ -32,6 +32,9 @@ Where the arguments are used as follows:
     * `--changelog-file-name /some/path/filename`: A CSV list of paths on disk to the files you wish to output the file changelogs to. If you do not use this, the file changelog will be written to changelog#.txt in the working directory by default (where # is the changelog file number).
 * `--eol-style (NATIVE|CRLF|LF)`: The type of line endings you wish the changelog files to use. Valid values are NATIVE (system line endings), CRLF (Windows line endings) or LF (UNIX line endings). If you do not use this, the changelogs will use the default system line endings (NATIVE).
 
+Managing the Cache
+------------------
+
 When specifying `--object-cache-path` the Java objects used to store the changelog information for a single version are serialized. The cache will always be used for any version other that the current version that has been specified in `<version>` however sometimes you need to rebuild an older version from JIRA (i.e. the version has changed in some way). This can be done simply by removing the serialised file, this fill will be found in the path specified by `--object-cache-path` with a file name of `<project>_<version>.ser` where `<project>` and `<version>` match the command line agruments. The JIRAChangelogBuilder will then regenerate these as required.
 
 Testing
