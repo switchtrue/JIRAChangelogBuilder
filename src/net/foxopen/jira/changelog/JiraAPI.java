@@ -11,7 +11,6 @@ import org.joda.time.DateTime;
 import com.atlassian.jira.rest.client.JiraRestClient;
 import com.atlassian.jira.rest.client.JiraRestClientFactory;
 import com.atlassian.jira.rest.client.ProjectRestClient;
-//import com.atlassian.jira.rest.client.NullProgressMonitor;
 import com.atlassian.jira.rest.client.RestClientException;
 import com.atlassian.jira.rest.client.domain.BasicIssue;
 import com.atlassian.jira.rest.client.domain.Issue;
@@ -93,17 +92,14 @@ public class JiraAPI {
     try {
       // Create the initial JIRA connection.
       Logger.log("Establishing JIRA API connection for generating changelog to " + jiraServerURI_ + ".");
-//      final JerseyJiraRestClientFactory factory = new JerseyJirasRestClientFactory();
       JiraRestClientFactory factory = new AsynchronousJiraRestClientFactory();
       final JiraRestClient restClient = factory.createWithBasicHttpAuthentication(jiraServerURI_, username_, password_);
-//      final NullProgressMonitor pm = new NullProgressMonitor();
 
       // Get an instance of the JIRA Project
       Logger.log("Obtaining project information via JIRA API.");
       ProjectRestClient projectClient = restClient.getProjectClient();
       Promise<Project> promise = projectClient.getProject(projectKey);
       Project proj = promise.claim();
-//      Project proj = restClient.getProjectClient().getProject(projectKey, pm);
 
       // Get a list of versions for this project and identify the one were
       // currently trying to build.
@@ -152,8 +148,6 @@ public class JiraAPI {
               try {
               Promise<SearchResult> searchJql = restClient.getSearchClient().searchJql("project = '" + projectKey + "' and fixVersion = '" + v.getName() + "'" + jql_);
               sr = searchJql.claim();
-//                sr = restClient.getSearchClient().searchJql("project = '" + projectKey + "' and fixVersion = '" + v.getName() + "'" + jql_);
-//                sr = restClient.getSearchClient().searchJql("project = '" + projectKey + "' and fixVersion = '" + v.getName() + "'" + jql_, pm);
 
                 for (BasicIssue bi : sr.getIssues()) {
                   Logger.log("Obtaining further issue details for issue '" + bi.getKey() + "' via JIRA API.");
