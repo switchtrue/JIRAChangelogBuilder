@@ -1,4 +1,4 @@
-package net.foxopen.jira.changelog;
+package com.switchtrue.jira.changelog;
 
 import java.io.FileWriter;
 import java.io.IOException;

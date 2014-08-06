@@ -15,11 +15,9 @@ bin
 nb*
 
 build
-changelog*
 target
 lib
 credentials.properties
-!/src/net/foxopen/jira/changelog/
-!/test/net/foxopen/jira/changelog/
 cache
 test*.txt
+test_output

@@ -24,7 +24,7 @@
     <jar update="true" destfile="${build}/jira-changelog-builder.jar" basedir="${build}/classes" includes="**,${lib}/**">
       <zipgroupfileset dir="${lib}" includes="*.jar"/>
       <manifest>
-        <attribute name="Main-Class" value="net.foxopen.jira.changelog.Changelog"/>
+        <attribute name="Main-Class" value="com.switchtrue.jira.changelog.Changelog"/>
       </manifest>
     </jar>
   </target>

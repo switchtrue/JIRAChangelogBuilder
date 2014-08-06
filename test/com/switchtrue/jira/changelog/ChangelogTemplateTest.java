@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package net.foxopen.jira.changelog;
+package com.switchtrue.jira.changelog;
 
 import java.io.*;
 import java.util.Date;
@@ -31,6 +31,16 @@ public class ChangelogTemplateTest extends TestCase {
   @Override
   protected void setUp() throws Exception {
     super.setUp();
+    
+    File outputDir = new File("test_output");
+    if (!outputDir.exists()) {
+      try{
+        outputDir.mkdir();
+      } catch(SecurityException se){
+        throw se;
+      } 
+    }
+    
     issues = new LinkedList<Change>();
 
     issues.add(new Change("TESTPROJ-10", "Test Issue", "Bug"));
@@ -123,22 +133,22 @@ public class ChangelogTemplateTest extends TestCase {
     args[6] = "html.mustache,plain-text.mustache";
     args[7] = "--debug";
     args[8] = "--changelog-file-name";
-    args[9] = "changelog.html,changelog.txt";
+    args[9] = "test_output" + File.separator + "changelog.html,test_output" + File.separator + "changelog.txt";
     args[10] = "--object-cache-path";
     args[11] = "cache";
 
     // wrapper function has same effect as main, minus the System.exit call.
     Changelog.main(args);
 
-    File f = new File("changelog.html");
+    File f = new File("test_output/changelog.html");
     assertTrue(f.exists());
   }
 
   public void testLineEndings() throws Exception {
     System.out.println("lineEndings");
-    FileWriter out1 = new FileWriter("testNative.txt");
-    FileWriter out2 = new FileWriter("testWindows.txt");
-    FileWriter out3 = new FileWriter("testNIX.txt");
+    FileWriter out1 = new FileWriter("test_output/testNative.txt");
+    FileWriter out2 = new FileWriter("test_output/testWindows.txt");
+    FileWriter out3 = new FileWriter("test_output/testNIX.txt");
     try {
       ChangelogTemplate.fileRoot = "examples";
       ChangelogTemplate.createChangelog(versions, out1, "plain-text.mustache", LineEnding.NATIVE);

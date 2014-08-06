@@ -1,4 +1,4 @@
-package net.foxopen.jira.changelog;
+package com.switchtrue.jira.changelog;
 
 import java.net.URI;
 import java.net.URISyntaxException;
