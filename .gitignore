@@ -10,14 +10,13 @@
 .project
 bin
 
-.changelogcache/*
 .nb*
 nb*
 
 build
 target
 lib
-credentials.properties
+*.properties
 cache
-test*.txt
 test_output
+dependency-reduced-pom.xml

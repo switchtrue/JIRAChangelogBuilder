@@ -121,7 +121,7 @@ public class ChangelogTemplateTest extends TestCase {
    */
   public void testFullRun() throws Exception {
     Properties properties = new Properties();
-    properties.load(new FileInputStream("credentials.properties"));
+    properties.load(new FileInputStream("testing.properties"));
     System.out.println("fullRun");
     String[] args = new String[12];
     args[0] = properties.getProperty("url");
@@ -146,9 +146,9 @@ public class ChangelogTemplateTest extends TestCase {
 
   public void testLineEndings() throws Exception {
     System.out.println("lineEndings");
-    FileWriter out1 = new FileWriter("test_output/testNative.txt");
-    FileWriter out2 = new FileWriter("test_output/testWindows.txt");
-    FileWriter out3 = new FileWriter("test_output/testNIX.txt");
+    FileWriter out1 = new FileWriter("test_output" + File.separator + "testNative.txt");
+    FileWriter out2 = new FileWriter("test_output" + File.separator + "testWindows.txt");
+    FileWriter out3 = new FileWriter("test_output" + File.separator + "testNIX.txt");
     try {
       ChangelogTemplate.fileRoot = "examples";
       ChangelogTemplate.createChangelog(versions, out1, "plain-text.mustache", LineEnding.NATIVE);
