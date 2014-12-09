@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package net.foxopen.jira.changelog;
+package com.switchtrue.jira.changelog;
 
 import java.util.HashMap;
 import java.util.List;

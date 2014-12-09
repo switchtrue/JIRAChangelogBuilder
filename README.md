@@ -40,7 +40,7 @@ When specifying `--object-cache-path` the Java objects used to store the changel
 Testing
 -------
 
-In order to execute the unit tests properly (and build/install the program), you must create a file named credentials.properties and place it in the base directory. In this file, add the following values:
+In order to execute the unit tests properly (and build/install the program), you must create a file named testing.properties and place it in the base directory. In this file, add the following values:
   
   * `url = <URL>` where `<URL>` is the web address of the JIRA instance.
   * `username = <username>` where `<username>` is the username of a user that can access the JIRA instance.

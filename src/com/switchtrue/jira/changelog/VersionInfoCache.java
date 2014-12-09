@@ -1,4 +1,4 @@
-package net.foxopen.jira.changelog;
+package com.switchtrue.jira.changelog;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -76,6 +76,9 @@ public class VersionInfoCache {
       fileIn.close();
       Logger.log("Cache hit for '" + versionName + "'");
       return vi;
+    } catch (ClassCastException cce) {
+      // The cached file found is not a VersionInfo object so don't use the cached version, fetch it again.
+      return null;
     } catch (FileNotFoundException fnf) {
       Logger.log("Cache miss for '" + versionName + "'");
       return null; // OK, don't use cache.

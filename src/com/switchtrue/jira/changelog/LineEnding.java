@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package net.foxopen.jira.changelog;
+package com.switchtrue.jira.changelog;
 
 /**
  * Represents the available line ending types supported by the changelog builder.

@@ -1,13 +1,10 @@
-package net.foxopen.jira.changelog;
+package com.switchtrue.jira.changelog;
 
 import java.util.Comparator;
 import java.io.Serializable;
 
 /**
  * Represents a JIRA issue for display in the changelog.
- *
- * @author apigram
- * @version 1.03.00
  */
 public class Change implements Serializable {
 

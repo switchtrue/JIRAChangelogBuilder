@@ -2,7 +2,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>net.foxopen.jira.changelog</groupId>
+	<groupId>com.switchtrue.jira.changelog</groupId>
 	<artifactId>jira-changelog-builder</artifactId>
 	<version>1.05.3</version>
 	<packaging>jar</packaging>
@@ -77,7 +77,7 @@
 							<transformers>
 								<transformer
 									implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-									<mainClass>net.foxopen.jira.changelog.Changelog</mainClass>
+									<mainClass>com.switchtrue.jira.changelog.Changelog</mainClass>
 								</transformer>
 							</transformers>
 						</configuration>
