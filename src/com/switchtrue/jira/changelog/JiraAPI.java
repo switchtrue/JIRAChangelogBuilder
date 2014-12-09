@@ -32,9 +32,12 @@ public class JiraAPI {
   private final String username_, password_;
   private final URI jiraServerURI_;
   private String jql_;
-  private String descriptionField;
+  private String descriptionField_;
   private LinkedList<VersionInfo> versionList_;
   private VersionInfoCache cache_;
+  private String fixVersionRestrictMode_;
+  private String fixVersionRestrictTerm_;
+  private Version buildVersion = null;
 
   /**
    * JiraAPI Constructor that accepts the basic information require to
@@ -46,7 +49,7 @@ public class JiraAPI {
    * @param descriptionField The name of the field in JIRA to use as the
    * changelog description.
    */
-  public JiraAPI(String username, String password, String URL, String jql, String descriptionField) {
+  public JiraAPI(String username, String password, String URL, String jql, String descriptionField, String fixVersionRestrictMode, String fixVersionRestrictTerm) {
     username_ = username;
     password_ = password;
 
@@ -56,7 +59,9 @@ public class JiraAPI {
       jql_ = " and (" + jql + ")";
     }
 
-    this.descriptionField = descriptionField;
+    descriptionField_ = descriptionField;
+    fixVersionRestrictMode_ = fixVersionRestrictMode;
+    fixVersionRestrictTerm_ = fixVersionRestrictTerm;
 
     URI tempURI = null;
     try {
@@ -77,6 +82,43 @@ public class JiraAPI {
     cache_ = cache;
   }
 
+  private boolean doesVersionNameMatchFilter(String versionName) {
+    if (fixVersionRestrictMode_ == null) {
+      return true;
+    }
+    
+    if (fixVersionRestrictMode_ == Changelog.FIX_VERSION_RESTICT_MODE_STARTS_WITH) {
+      if (versionName.startsWith(fixVersionRestrictTerm_)) {
+        Logger.log("Version '" + versionName + "' starts with '" + fixVersionRestrictTerm_ + "'.");
+        return true;
+      } else {
+        Logger.log("Version '" + versionName + "' does not start with '" + fixVersionRestrictTerm_ + "'. Omitting from changelog.");
+        return false;
+      }
+    }
+    
+    if (fixVersionRestrictMode_ == Changelog.FIX_VERSION_RESTICT_MODE_LESS_THAN_OR_EQUAL) {
+      int compare = versionName.compareTo(fixVersionRestrictTerm_);
+      if (compare <= 0){
+        Logger.log("Version '" + versionName + "' is less than or equal to '" + fixVersionRestrictTerm_ + "'.");
+        return true;
+      } else {
+        Logger.log("Version '" + versionName + "' is not less than or equal to '" + fixVersionRestrictTerm_ + "'. Omitting from changelog.");
+        return false;
+      }
+    }
+    
+    return false;
+  }
+  
+  private boolean isVersionBeforeOrEqualToBuildReleaseDate(DateTime versionReleaseDate) {
+    if (versionReleaseDate.isBefore(buildVersion.getReleaseDate()) || versionReleaseDate.isEqual(buildVersion.getReleaseDate())) {
+      return true;
+    }
+    
+    return false;
+  }
+  
   /**
    * Communicate with JIRA to find all versions prior to the version you are
    * currently building for each version found get a list of issues fixed in
@@ -104,7 +146,6 @@ public class JiraAPI {
       // Get a list of versions for this project and identify the one were
       // currently trying to build.
       Logger.log("Determining if the version '" + versionLabel + "' exists in JIRA.");
-      Version buildVersion = null;
       for (Version v : proj.getVersions()) {
         if (v.getName().equals(versionLabel)) {
           buildVersion = v;
@@ -131,8 +172,8 @@ public class JiraAPI {
           if (versionReleaseDate == null) {
             versionReleaseDate = new DateTime();
           }
-          if ((v.getName().equals(versionLabel) || versionReleaseDate.isBefore(buildVersion.getReleaseDate()) || versionReleaseDate.isEqual(buildVersion.getReleaseDate()))) {
-            Logger.log("Version '" + v.getName() + "' was released before '" + versionLabel + "' - generating changelog.");
+          if ( (v.getName().equals(versionLabel) || isVersionBeforeOrEqualToBuildReleaseDate(versionReleaseDate)) && doesVersionNameMatchFilter(v.getName()) ) {
+            Logger.log("Adding '" + v.getName() + "' to changelog.");
             // Attempt to get the changelog from the cache. If it can't be found
             // or were trying to generate a changelog for the current version then
             // build/rebuild and cache.
@@ -157,7 +198,7 @@ public class JiraAPI {
                   String changelogDescription;
                   String type = null;
                   try {
-                    changelogDescription = i.getFieldByName(descriptionField).getValue().toString();
+                    changelogDescription = i.getFieldByName(descriptionField_).getValue().toString();
                   } catch (NullPointerException npe) {
                     // Changelog Description doesn't exist as a field for this
                     // issue so just default to the summary.
@@ -179,7 +220,7 @@ public class JiraAPI {
                   String changelogDescription = null;
                   String type = null;
                   try {
-                    changelogDescription = i.getFieldByName(descriptionField).getValue().toString();
+                    changelogDescription = i.getFieldByName(descriptionField_).getValue().toString();
                   } catch (NullPointerException npe) {
                     // Changelog Description doesn't exist as a field for this
                     // issue so just default to the summary.

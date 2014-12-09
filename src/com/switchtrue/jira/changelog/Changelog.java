@@ -9,14 +9,14 @@ import java.io.File;
  */
 public class Changelog {
 
-  public static int FIX_VERSION_RESTICT_MODE_STARTS_WITH = 10;
-  public static int FIX_VERSION_RESTICT_MODE_LESS_THAN   = 20;_OR_EQUAL
+  public static String FIX_VERSION_RESTICT_MODE_STARTS_WITH        = "SW";
+  public static String FIX_VERSION_RESTICT_MODE_LESS_THAN_OR_EQUAL = "LTE";
 
   /**
    * Show usage of the application.
    */
   public static void showUsage() {
-    System.out.println("Usage:");k
+    System.out.println("Usage:");
     System.out.println("java -jar jira-changelog-builder.jar <JIRA_URL> <JIRA_username> <JIRA_password> <JIRA_project_key> <version> <template_list> [<flags>]");
     System.out.println("<JIRA_URL>: The URL of the JIRA instance (e.g. https://somecompany.atlassian.net).");
     System.out.println("<JIRA_username>: The username used to log into JIRA.");
@@ -112,7 +112,7 @@ public class Changelog {
             Logger.err("You cannot use both --version-starts-with and --version-less-than-or-equal at the same time or supply either of them more than once.");  
             System.exit(2);
           }
-          fixVersionRestrictMode = FIX_VERSION_RESTICT_MODE_STARTS_WITH
+          fixVersionRestrictMode = FIX_VERSION_RESTICT_MODE_STARTS_WITH;
           fixVersionRestrictTerm = args[++currentArgument];
           Logger.log("--version-starts-with found. Only inlcude versions starting with " + fixVersionRestrictTerm + " in the Changelog.");
         } else if (args[currentArgument].equals("--version-less-than-or-equal")) {
@@ -120,7 +120,7 @@ public class Changelog {
             Logger.err("You cannot use both --version-starts-with and --version-less-than-or-equal at the same time or supply either of them more than once.");  
             System.exit(2);
           }
-          fixVersionRestrictMode = FIX_VERSION_RESTICT_MODE_LESS_THAN_OR_EQUAL
+          fixVersionRestrictMode = FIX_VERSION_RESTICT_MODE_LESS_THAN_OR_EQUAL;
           fixVersionRestrictTerm = args[++currentArgument];
           Logger.log("--version-less-than-or-equal found. Only inlcude versions with a name less than or equal to " + fixVersionRestrictTerm + " in the Changelog.");
         }
@@ -152,7 +152,7 @@ public class Changelog {
       }
     }
 
-    JiraAPI jiraApi = new JiraAPI(jiraUsername, jiraPassword, jiraURL, jql, descriptionField);
+    JiraAPI jiraApi = new JiraAPI(jiraUsername, jiraPassword, jiraURL, jql, descriptionField, fixVersionRestrictMode, fixVersionRestrictTerm);
 
     if (objectCachePath != null) {
       VersionInfoCache cache = new VersionInfoCache(jiraProjectKey, objectCachePath);

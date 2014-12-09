@@ -165,4 +165,79 @@ public class ChangelogTemplateTest extends TestCase {
     out3.close();
     assertTrue(true);
   }
+  
+  /**
+   * Black-box integration test for a complete run of the program limiting
+   * the changelog to only version that start with a particular value.
+   *
+   * @throws Exception
+   */
+  public void testVersionStartsWith() throws Exception {
+    Properties properties = new Properties();
+    properties.load(new FileInputStream("testing.properties"));
+    System.out.println("startsWith");
+    
+    String starts_with = properties.getProperty("versionstartswith");
+    String file_name = "version_starts_with_" + starts_with + ".html";
+    
+    String[] args = new String[14];
+    args[0] = properties.getProperty("url");
+    args[1] = properties.getProperty("username");
+    args[2] = properties.getProperty("password");
+    args[3] = properties.getProperty("project");
+    args[4] = properties.getProperty("version");
+    args[5] = "examples";
+    args[6] = "html.mustache,plain-text.mustache";
+    args[7] = "--debug";
+    args[8] = "--changelog-file-name";
+    args[9] = "test_output" + File.separator + file_name + ",test_output" + File.separator + "changelog.txt";
+    args[10] = "--object-cache-path";
+    args[11] = "cache";
+    args[12] = "--version-starts-with";
+    args[13] = starts_with;
+
+    // wrapper function has same effect as main, minus the System.exit call.
+    Changelog.main(args);
+
+    File f = new File("test_output/" + file_name);
+    assertTrue(f.exists());
+  }
+  
+  /**
+   * Black-box integration test for a complete run of the program limiting
+   * the changelog to only versions that have a name less than or equal to
+   * a certain value.
+   *
+   * @throws Exception
+   */
+  public void testVersionLessThanOrEqual() throws Exception {
+    Properties properties = new Properties();
+    properties.load(new FileInputStream("testing.properties"));
+    System.out.println("lessThanOrEqual");
+    
+    String less_than_equal = properties.getProperty("versionlessthanorequal");
+    String file_name = "version_less_than_or_equal_" + less_than_equal + ".html";
+    
+    String[] args = new String[14];
+    args[0] = properties.getProperty("url");
+    args[1] = properties.getProperty("username");
+    args[2] = properties.getProperty("password");
+    args[3] = properties.getProperty("project");
+    args[4] = properties.getProperty("version");
+    args[5] = "examples";
+    args[6] = "html.mustache,plain-text.mustache";
+    args[7] = "--debug";
+    args[8] = "--changelog-file-name";
+    args[9] = "test_output" + File.separator + file_name +",test_output" + File.separator + "changelog.txt";
+    args[10] = "--object-cache-path";
+    args[11] = "cache";
+    args[12] = "--version-less-than-or-equal";
+    args[13] = less_than_equal;
+
+    // wrapper function has same effect as main, minus the System.exit call.
+    Changelog.main(args);
+
+    File f = new File("test_output/version_less_than_or_equal_" + less_than_equal + ".html");
+    assertTrue(f.exists());
+  }
 }
