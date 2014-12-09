@@ -173,5 +173,7 @@ public class Changelog {
     clWriter.build(jiraApi.getVersionInfoList(), files, templateRoot, templates, ending);
 
     Logger.log("Done - Success!");
+    
+    System.exit(0);
   }
 }
