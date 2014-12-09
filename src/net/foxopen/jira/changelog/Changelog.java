@@ -9,11 +9,14 @@ import java.io.File;
  */
 public class Changelog {
 
+  public static int FIX_VERSION_RESTICT_MODE_STARTS_WITH = 10;
+  public static int FIX_VERSION_RESTICT_MODE_LESS_THAN   = 20;_OR_EQUAL
+
   /**
    * Show usage of the application.
    */
   public static void showUsage() {
-    System.out.println("Usage:");
+    System.out.println("Usage:");k
     System.out.println("java -jar jira-changelog-builder.jar <JIRA_URL> <JIRA_username> <JIRA_password> <JIRA_project_key> <version> <template_list> [<flags>]");
     System.out.println("<JIRA_URL>: The URL of the JIRA instance (e.g. https://somecompany.atlassian.net).");
     System.out.println("<JIRA_username>: The username used to log into JIRA.");
@@ -30,6 +33,8 @@ public class Changelog {
     System.out.println("\t--debug: Print debug/logging information to standard out. This will also force errors to go to the standard out and exit with code 0 rather than 1.");
     System.out.println("\t--changelog-description-field 'field_name': The name of the field in JIRA you wish to use as the changelog description field. If you do not use this, it will default to the summary field.");
     System.out.println("\t--eol-style (NATIVE|CRLF|LF): The type of line endings you wish the changelog files to use. Valid values are NATIVE (system line endings), CRLF (Windows line endings) or LF (UNIX line endings). If you do not use this, the changelogs will use the default system line endings.");
+    System.out.println("\t--version-starts-with 'Version name prefix': Only display versions in the changelog that have a name starting with 'Version name prefix'. This cannot be used with --version-less-than-or-equal. This is useful for restricting what goes in the changelog if you are producing different version side-by-side.");
+    System.out.println("\t--version-less-than-or-equal 'Version name': Only display versions in the changelog that have a name less than or equal to 'Version name'. This cannot be used with --version-starts-with. This uses a Java string comparison. This is useful for restricting what goes in the changelog if you are producing different version side-by-side.");
   }
 
   /**
@@ -65,6 +70,8 @@ public class Changelog {
     String files[] = null;
     String objectCachePath = null;
     String descriptionField = null;
+    String fixVersionRestrictMode = null;
+    String fixVersionRestrictTerm = null;
     LineEnding ending = LineEnding.NATIVE; // default to native line endings
     for (; currentArgument < args.length; currentArgument++) {
       try {
@@ -100,7 +107,24 @@ public class Changelog {
         } else if (args[currentArgument].equals("--changelog-description-field")) {
           descriptionField = args[++currentArgument];
           Logger.log("--changelog-description-field found. Using " + descriptionField + " as the Changelog Description field.");
-        } else {
+        } else if (args[currentArgument].equals("--version-starts-with")) {
+          if (fixVersionRestrictMode != null) {
+            Logger.err("You cannot use both --version-starts-with and --version-less-than-or-equal at the same time or supply either of them more than once.");  
+            System.exit(2);
+          }
+          fixVersionRestrictMode = FIX_VERSION_RESTICT_MODE_STARTS_WITH
+          fixVersionRestrictTerm = args[++currentArgument];
+          Logger.log("--version-starts-with found. Only inlcude versions starting with " + fixVersionRestrictTerm + " in the Changelog.");
+        } else if (args[currentArgument].equals("--version-less-than-or-equal")) {
+          if (fixVersionRestrictMode != null) {
+            Logger.err("You cannot use both --version-starts-with and --version-less-than-or-equal at the same time or supply either of them more than once.");  
+            System.exit(2);
+          }
+          fixVersionRestrictMode = FIX_VERSION_RESTICT_MODE_LESS_THAN_OR_EQUAL
+          fixVersionRestrictTerm = args[++currentArgument];
+          Logger.log("--version-less-than-or-equal found. Only inlcude versions with a name less than or equal to " + fixVersionRestrictTerm + " in the Changelog.");
+        }
+        else {
           Logger.err("Unknown argument: " + args[currentArgument]);
           System.exit(2);
         }

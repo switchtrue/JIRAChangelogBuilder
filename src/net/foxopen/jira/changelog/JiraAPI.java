@@ -131,11 +131,10 @@ public class JiraAPI {
           if (versionReleaseDate == null) {
             versionReleaseDate = new DateTime();
           }
-          if (v.getName().equals(versionLabel) || versionReleaseDate.isBefore(buildVersion.getReleaseDate()) || versionReleaseDate.isEqual(buildVersion.getReleaseDate())) {
+          if ((v.getName().equals(versionLabel) || versionReleaseDate.isBefore(buildVersion.getReleaseDate()) || versionReleaseDate.isEqual(buildVersion.getReleaseDate()))) {
             Logger.log("Version '" + v.getName() + "' was released before '" + versionLabel + "' - generating changelog.");
             // Attempt to get the changelog from the cache. If it can't be found
-            // or were trying
-            // to generate a changelog for the current version then
+            // or were trying to generate a changelog for the current version then
             // build/rebuild and cache.
             VersionInfo vi = null;
             if (cache_ != null && !v.getName().equals(versionLabel)) {
