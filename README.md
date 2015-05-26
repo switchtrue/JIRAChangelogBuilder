@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/mleonard87/jirachangelogbuilder.png?label=ready&title=Ready)](https://waffle.io/mleonard87/jirachangelogbuilder)
 JIRAChangelogBuilder
 ====================
 
